@@ -10,22 +10,23 @@ class Control extends Component {
     this.lastVector = { x: 0, y: 0 };
     this.state = { x: 0, y: 0, enableMovement: false };
     this.interval = null;
+    this.joystick = null;
   }
 
   componentDidMount() {
-    const joystick = nipplejs.create({
+    this.joystick = nipplejs.create({
       zone: document.getElementById("scorpio-touch-joystick"),
-      mode: "static",
-      position: { left: "50%", top: "50%" },
+      mode: "dynamic",
       color: "#e66b00",
-      size: 200
+      size: 200,
+      multitouch: true
     });
 
-    joystick.on("move", (_, data) => {
+    this.joystick.on("move", (_, data) => {
       this.lastVector = data.vector;
     });
 
-    joystick.on("end", () => (this.lastVector = { x: 0, y: 0 }));
+    this.joystick.on("end", () => (this.lastVector = { x: 0, y: 0 }));
 
     this.interval = setInterval(() => {
       this.setState({ x: this.lastVector.x, y: this.lastVector.y });
@@ -43,6 +44,7 @@ class Control extends Component {
 
   componentWillUnmount() {
     if (this.interval) clearInterval(this.interval);
+    if (this.joystick) this.joystick.destroy();
   }
 
   buildRoverControlCommand(vector) {
@@ -90,7 +92,9 @@ class Control extends Component {
             X: {x.toFixed(2)} Y: {y.toFixed(2)}
           </div>
         </Segment>
-        <div id="scorpio-touch-joystick" style={{ border: "1px solid gray", height: "70vh", marginTop: "1em" }} />
+        <div>
+          <div id="scorpio-touch-joystick" style={{ border: "2px dashed gray", position: "relative", height: "70vh" }} />
+        </div>
       </div>
     );
   }

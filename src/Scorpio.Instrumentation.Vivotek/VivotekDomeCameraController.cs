@@ -34,9 +34,16 @@ namespace Scorpio.Instrumentation.Vivotek
 
         private async Task GetRawWithBasicAuthAsync(string endpoint)
         {
-            SetBasicAuthHeaders();
-            Logger.LogInformation($"Sending camera command, constructed url: {endpoint}");
-            await GetRawAsync(endpoint);
+            try
+            {
+                SetBasicAuthHeaders();
+                Logger.LogInformation($"Sending camera command, constructed url: {endpoint}");
+                await GetRawAsync(endpoint);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, ex.Message, nameof(VivotekDomeCameraController));
+            }
         }
     }
 }

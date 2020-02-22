@@ -1,5 +1,4 @@
-﻿using Autofac;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Net.Sockets;
 
@@ -19,10 +18,9 @@ namespace Scorpio.Messaging.Sockets.Workers
         private readonly SenderWorker _senderWorker;
         private readonly ReceiverWorker _receiverWorker;
 
-        public NetworkWorkersFacade(ILifetimeScope autofac)
+        public NetworkWorkersFacade(ILoggerFactory loggerFactory)
         {
-            Logger = autofac.Resolve<ILogger<NetworkWorkersFacade>>();
-            var loggerFactory = autofac.Resolve<ILoggerFactory>();
+            Logger = loggerFactory.CreateLogger<NetworkWorkersFacade>();
 
             _senderWorker = new SenderWorker(loggerFactory)
             {

@@ -6,13 +6,12 @@ using Scorpio.Gamepad.IO.Args;
 using Scorpio.Gamepad.Processors;
 using Scorpio.Gamepad.Processors.Mixing;
 using Scorpio.GUI.Utils;
+using Scorpio.Messaging.Abstractions;
+using Scorpio.Messaging.Messages;
 using System;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using Newtonsoft.Json;
-using Scorpio.Messaging.Abstractions;
-using Scorpio.Messaging.Messages;
 
 namespace Scorpio.GUI.Controls
 {
@@ -30,7 +29,6 @@ namespace Scorpio.GUI.Controls
             set => _autofac = value;
         }
 
-        private bool _logMessages;
         private bool _isStarted;
         private GamepadPoller _poller;
         private IGamepadProcessor<RoverMixer, RoverProcessorResult> _gamepadProcessor;
@@ -127,7 +125,6 @@ namespace Scorpio.GUI.Controls
 
             var msg = new RoverControlCommand(_latestResult.Direction, _latestResult.Acceleration * 8.0f);
             _eventBus?.Publish(msg);
-            if (_logMessages) _logger.LogDebug(JsonConvert.SerializeObject(msg));
         }
 
         private void btnStop_Click(object sender, EventArgs e)
@@ -164,12 +161,6 @@ namespace Scorpio.GUI.Controls
             pbDir.SetProgressNoAnimation(0);
 
             _isStarted = false;
-        }
-
-        private void chbLogMessages_CheckedChanged(object sender, EventArgs e)
-        {
-            var chb = (CheckBox)sender;
-            _logMessages = chb.Checked;
         }
     }
 }

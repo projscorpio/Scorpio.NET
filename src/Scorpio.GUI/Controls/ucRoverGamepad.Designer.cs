@@ -42,7 +42,6 @@
             this.lblAcc = new System.Windows.Forms.Label();
             this.cbGamepadIndex = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.chbLogMessages = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label1
@@ -176,23 +175,11 @@
             this.label5.TabIndex = 0;
             this.label5.Text = "Index:";
             // 
-            // chbLogMessages
-            // 
-            this.chbLogMessages.AutoSize = true;
-            this.chbLogMessages.Location = new System.Drawing.Point(106, 100);
-            this.chbLogMessages.Name = "chbLogMessages";
-            this.chbLogMessages.Size = new System.Drawing.Size(119, 21);
-            this.chbLogMessages.TabIndex = 4;
-            this.chbLogMessages.Text = "Log message";
-            this.chbLogMessages.UseVisualStyleBackColor = true;
-            this.chbLogMessages.CheckedChanged += new System.EventHandler(this.chbLogMessages_CheckedChanged);
-            // 
             // ucRoverGamepad
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.Controls.Add(this.chbLogMessages);
             this.Controls.Add(this.cbGamepadIndex);
             this.Controls.Add(this.pbDir);
             this.Controls.Add(this.pbAcc);
@@ -231,6 +218,5 @@
         private System.Windows.Forms.Label lblAcc;
         private System.Windows.Forms.ComboBox cbGamepadIndex;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.CheckBox chbLogMessages;
     }
 }

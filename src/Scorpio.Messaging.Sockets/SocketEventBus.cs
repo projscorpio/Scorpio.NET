@@ -31,7 +31,7 @@ namespace Scorpio.Messaging.Sockets
 
             _socketClient = socketClient ?? throw new ArgumentNullException(nameof(socketClient));
             _socketClient.MessageReceived += async (s, e) => await ProcessEvent(e?.Envelope);
-            _socketClient.TryConnect();
+            _socketClient.Connected += (s, e) => SendUpdatedSubscriptionList();
         }
         
         public void Publish(IntegrationEvent @event)
@@ -82,7 +82,6 @@ namespace Scorpio.Messaging.Sockets
             _logger.LogInformation($"Socket subscription manager: subscribed to: {eventName}");
             _busSubscriptionManager.AddSubscription<TEvent, THandler>();
             _subscriptionKeys.Add(eventName);
-            SendUpdatedSubscriptionList();
         }
 
         public void Unsubscribe<TEvent, THandler>(string keyOverride = null)
@@ -94,7 +93,6 @@ namespace Scorpio.Messaging.Sockets
             _logger.LogInformation($"Socket subscription manager: unsubscribed from: {eventName}");
             _busSubscriptionManager.RemoveSubscription<TEvent, THandler>();
             _subscriptionKeys.Remove(eventName);
-            SendUpdatedSubscriptionList();
         }
 
         private void SendUpdatedSubscriptionList()

@@ -84,11 +84,11 @@ namespace Scorpio.GUI.Controls
                     break;
 
                 case "cbTiltSpeed":
-                    cmd = CameraSpeedCommand.PanSpeed;
+                    cmd = CameraSpeedCommand.TiltSpeed;
                     break;
 
                 case "cbZoomSpeed":
-                    cmd = CameraSpeedCommand.PanSpeed;
+                    cmd = CameraSpeedCommand.ZoomSpeed;
                     break;
 
                 default: throw new NotImplementedException();

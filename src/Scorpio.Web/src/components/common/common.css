@@ -72,3 +72,7 @@
   border-bottom: 1px solid gray;
   margin-bottom: 5px;
 }
+
+.ui.wide.left {
+  max-width: 200px !important;
+}

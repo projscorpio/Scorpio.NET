@@ -17,15 +17,10 @@ namespace Scorpio.Messaging.Sockets
         {
             return services.AddSingleton<ISocketClient>(sp =>
             {
-                var logger = sp.GetRequiredService<ILogger<SocketClient>>();
+                var loggerFactory = sp.GetRequiredService<ILoggerFactory>();
                 var config = sp.GetRequiredService<IOptions<SocketConfiguration>>();
-                var autofac = sp.GetRequiredService<ILifetimeScope>();
 
-                logger.LogInformation("**********************************************************");
-                logger.LogInformation($"Socket trying to connect: {config.Value.Host}:{config.Value.Port}");
-                logger.LogInformation("**********************************************************");
-
-                return new SocketClient(autofac, logger, config);
+                return new SocketClient(loggerFactory, config);
             });
         }
 
@@ -38,15 +33,10 @@ namespace Scorpio.Messaging.Sockets
         {
              builder.Register<ISocketClient>(ctx =>
                 {
-                    var logger = ctx.Resolve<ILogger<SocketClient>>();
+                    var loggerFactory = ctx.Resolve<ILoggerFactory>();
                     var options = Options.Create(socketConfiguration);
-                    var autofac = ctx.Resolve<ILifetimeScope>();
 
-                    logger.LogInformation("**********************************************************");
-                    logger.LogInformation($"Socket trying to connect: {options.Value.Host}:{options.Value.Port}");
-                    logger.LogInformation("**********************************************************");
-
-                    return new SocketClient(autofac, logger, options);
+                    return new SocketClient(loggerFactory, options);
                 })
                 .SingleInstance();
 
