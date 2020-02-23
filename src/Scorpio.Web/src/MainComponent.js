@@ -13,6 +13,7 @@ import AlertDispatcher from "./services/AlertDispatcher";
 import DashboardScreen from "./components/screens/dashboard/dashboardScreen";
 import StreamScreen from "./components/screens/stream/streamScreen";
 import GamepadScreen from "./components/screens/gamepad/gamepadScreen";
+import MapScreen from "./components/screens/map/mapScreen";
 import AboutScreen from "./components/screens/about/aboutScreen";
 import SensorsEditorScreen from "./components/screens/sensor-editor/sensorEditorScreen";
 import StreamEditorScreen from "./components/screens/stream-editor/streamEditorScreen";
@@ -23,6 +24,7 @@ import StatusOverlay from "./components/common/statusOverlay";
 import GamepadService from "./services/GamepadService";
 import MessagingService from "./services/MessagingService";
 import FiluRacer from "./components/common/filuRacer";
+import { ConnectedRouter } from "connected-react-router";
 
 class MainComponent extends Component {
   async componentDidMount() {
@@ -57,7 +59,7 @@ class MainComponent extends Component {
   render() {
     return (
       <>
-        <NavBar className="fullWidth">
+        <NavBar className="fullWidth fullHeight">
           <Switch>
             <Route exact path="/" render={_ => <Redirect to={"/dashboard"} />} />
             <Route exact path="/dashboard" component={DashboardScreen} />
@@ -70,6 +72,7 @@ class MainComponent extends Component {
             <Route exact path="/science/sensor-charts" component={ScienceChartsScreen} />
             <Route exact path="/console" component={ConsoleScreen} />
             <Route exact path="/filu" component={FiluRacer} />
+            <Route exact path="/map" component={MapScreen} />
             <Route exact path="/not-found" component={NotFound} />
             <Redirect to="/not-found" />
           </Switch>

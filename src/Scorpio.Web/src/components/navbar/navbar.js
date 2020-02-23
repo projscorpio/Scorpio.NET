@@ -35,4 +35,4 @@ export default class NavBar extends Component {
   }
 }
 
-const NavBarChildren = ({ children }) => <Container style={{ marginTop: "5em", width: "100%" }}>{children}</Container>;
+const NavBarChildren = ({ children }) => <Container style={{ marginTop: "5em", width: "100%" , height: "100%"}}>{children}</Container>;

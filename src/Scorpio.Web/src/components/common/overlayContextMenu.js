@@ -32,12 +32,14 @@ class OverlayContextMenu extends PureComponent {
     }
 
     return (
-      <div className="fullWidth fullHeight bordered">
+      <div className="fullWidth fullHeight bordered" style={{ display: "table" }}>
         <div className="fullWidth center">
           <h4 className="padding-bottom-sm">{widgetTitle}</h4>
         </div>
-        <div className="center fullWidth fullHeight" style={{ display: "table" }}>
-          <div style={{ display: "table-cell", verticalAlign: "middle" }}>{this.props.children}</div>
+        <div className="center fullWidth fullHeight" style={{ display: "table-row" }}>
+          <div className="fullWidth fullHeight"
+               style={{ display: "table-cell", verticalAlign: "middle", }}>{this.props.children}
+          </div>
         </div>
       </div>
     );

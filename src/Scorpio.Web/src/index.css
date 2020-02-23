@@ -1,4 +1,5 @@
 body {
+  display: flex;
   margin: 0;
   padding: 0;
   height: 100%;
@@ -14,6 +15,12 @@ html {
 
 #root {
   height: 100%;
+  width: 100%;
+}
+
+#root>div:first-child { /* wybacz TODO write more specified selector*/
+  height: 100%;
+  width: 100%;
 }
 
 .fullWidth {

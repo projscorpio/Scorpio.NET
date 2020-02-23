@@ -3,6 +3,7 @@ import GamepadAnalogs from "./gamepadAnalogs";
 import ChartWidget from "./chartWidget";
 import BatteryWidget from "./batteryWidget";
 import UbiquitiWidget from "./ubiquitiWidget";
+import MapWidget from "./mapWidget";
 
 export const widgets = [
   {
@@ -53,6 +54,16 @@ export const widgets = [
       value: "UbiquitiWidget",
       text: "Ubiquiti",
       description: "Display ubiquiti stats"
+    }
+  },
+  {
+    component: MapWidget,
+    type: "MapWidget",
+    dropdown: {
+      key: "MapWidget",
+      value: "MapWidget",
+      text: "Map",
+      description: "Display gps map"
     }
   }
 ];

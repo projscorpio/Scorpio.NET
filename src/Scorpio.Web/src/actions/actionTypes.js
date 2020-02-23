@@ -8,3 +8,7 @@ export const DELETE_CONFIG = "DELETE_CONFIG";
 export const SET_SENSORS = "SET_SENSORS";
 
 export const SET_STREAMS = "SET_STREAMS";
+
+export const SET_MAP_MARKERS = "SET_MAP_MARKERS";
+
+export const FETCH_ROVER_POSITION = "FETCH_ROVER_POSITION";
