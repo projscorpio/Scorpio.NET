@@ -11,7 +11,10 @@ using Scorpio.Messaging.Messages;
 using System;
 using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Windows.Forms;
+using Scorpio.Instrumentation.Vivotek;
+using Scorpio.Instrumentation.Vivotek.DomeCamera;
 
 namespace Scorpio.GUI.Controls
 {
@@ -29,7 +32,6 @@ namespace Scorpio.GUI.Controls
             set => _autofac = value;
         }
 
-        private bool _isStarted;
         private GamepadPoller _poller;
         private IGamepadProcessor<RoverMixer, RoverProcessorResult> _gamepadProcessor;
         private int _pollerThreadSleepTime = 40; // default 40
@@ -38,6 +40,40 @@ namespace Scorpio.GUI.Controls
         private RoverProcessorResult _latestResult;
         private CyclicTimer _timer;
         private IEventBus _eventBus;
+        private bool _enableSending;
+
+        #region Vivotek section
+        private string _vivotekId;
+        public string VivotekId
+        {
+            get
+            {
+                if (_vivotekId is null && !DesignMode)
+                    throw new ArgumentNullException("VivotekId was not provided.");
+                return _vivotekId;
+            }
+            set => _vivotekId = value;
+        }
+
+        private VivotekModel _camConfig;
+        private VivotekModel Config => _camConfig ?? (_camConfig = _autofac.Resolve<CameraConfigModel>().GetVivotekById(VivotekId));
+
+        private VivotekDomeCameraController _controller;
+        private VivotekDomeCameraController Controller
+        {
+            get
+            {
+                if (_controller != null)
+                    return _controller;
+
+                _controller = _autofac.Resolve<VivotekDomeCameraController>();
+                _controller.Credentials = new NetworkCredential(Config.Username, Config.Password);
+                _controller.ApiUrl = Config.BaseApiUrl;
+
+                return _controller;
+            }
+        }
+        #endregion
 
         public ucRoverGamepad()
         {
@@ -73,9 +109,11 @@ namespace Scorpio.GUI.Controls
             lblAcc.Text = string.Empty;
             lblDir.Text = string.Empty;
             pbAcc.Minimum = 0;
-            pbAcc.Maximum = 200;
+            pbAcc.Maximum = 1600;
             pbDir.Minimum = 0;
             pbDir.Maximum = 200;
+
+            SetupGamepadPoller();
         }
 
         private void _poller_GamepadStateChanged(object sender, GamepadEventArgs e)
@@ -84,83 +122,91 @@ namespace Scorpio.GUI.Controls
             UpdateResultWidgets(_latestResult);
         }
 
-        private void UpdateResultWidgets(RoverProcessorResult result)
-        {
-            Invoke(new Action(() =>
+        private void UpdateResultWidgets(RoverProcessorResult result) =>
+            this.Invoke(() =>
             {
                 // -200 200 rot hack (progress bar would crash over -100:100 range)
                 // so limit it to -100:100
-                var limitedRot = ScalingUtils.SymmetricalConstrain((int)(result.Direction * 100), 100);
+                var limitedRot = ScalingUtils.SymmetricalConstrain((int)(result.Direction * 1000), 100);
 
                 lblAcc.Text = result.Acceleration.ToString("0.##");
                 lblDir.Text = result.Direction.ToString("0.##");
-                //pbAcc.SetProgressNoAnimation((int)result.Acceleration + 100); // Progress bar has range 0-200, shift + 100
+                pbAcc.SetProgressNoAnimation((int)result.Acceleration + 800); // Progress bar has range 0-1600, shift + 800
                 pbDir.SetProgressNoAnimation((int)limitedRot + 100); // Progress bar has range 0-200, shift + 100
-            }));
-        }
+            });
 
-        private void btnStart_Click(object sender, EventArgs e)
+        private void btnStart_Click(object sender, EventArgs ev)
         {
-            if (_isStarted)
+            if (_enableSending)
             {
-                _logger.LogWarning("Already started!");
+                _logger.LogWarning("Already armed!");
                 return;
             }
 
+            // Start publishing messages
+            _timer.Start(20); // send message every x ms
+            SetStateStarted();
+            _enableSending = true;
+            _logger.LogInformation($"Rover gamepad started with index: {_gamepadIndex}");
+        }
+
+        private void btnStop_Click(object sender, EventArgs e)
+        {
+            // Already started
+            if (!_enableSending)
+            {
+                _logger.LogDebug("Already disarmed!");
+                return;
+            }
+
+            _timer.Stop();
+            _enableSending = false;
+            SetStateStopped();
+        }
+
+        private void SetupGamepadPoller()
+        {
             // Start gamepad poller
             _poller = new GamepadPoller(_gamepadIndex, _pollerThreadSleepTime);
             _poller.GamepadStateChanged += _poller_GamepadStateChanged;
-            _poller.StartPolling();
-
-            // Start publishing messages
-            _timer.Start(20); // send message every 50 ms
-
-            _logger.LogInformation($"Rover gamepad started with index: {_gamepadIndex}");
-            SetStateStarted();
+            _poller.DPadLeftChanged += async (_, isPressed) => { if (isPressed) await Controller.Control(CameraCommand.Left); };
+            _poller.DPadRightChanged += async (_, isPressed) => { if (isPressed) await Controller.Control(CameraCommand.Right); };
+            _poller.DPadUpChanged += async (_, isPressed) => { if (isPressed) await Controller.Control(CameraCommand.Up); };
+            _poller.DPadDownChanged += async (_, isPressed) => { if (isPressed) await Controller.Control(CameraCommand.Down); };
         }
 
         private void TimerElapsedAction()
         {
-            if (_latestResult is null) _latestResult = new RoverProcessorResult();
+            if (!_enableSending || _latestResult is null) return;
 
             var msg = new RoverControlCommand(_latestResult.Direction, _latestResult.Acceleration * 8.0f);
             _eventBus?.Publish(msg);
         }
 
-        private void btnStop_Click(object sender, EventArgs e)
+        private void SetStateStarted() =>
+            this.Invoke(() =>
+            {
+                lblState.Text = "Started";
+                lblState.ForeColor = Color.Green;
+            });
+
+        private void SetStateStopped() => 
+            this.Invoke(() =>
+                {
+                    lblState.Text = "Stopped";
+                    lblState.ForeColor = Color.Red;
+
+                    lblAcc.Text = string.Empty;
+                    lblDir.Text = string.Empty;
+                    pbAcc.SetProgressNoAnimation(0);
+                    pbDir.SetProgressNoAnimation(0);
+                });
+        
+
+        private void Invoke(Action action)
         {
-            if (_isStarted == false) return;
-
-            // Stop publishing to rabbit mq
-            _timer.Stop();
-
-            // Stop gamepad polling
-            _poller.StopPolling();
-            _poller.GamepadStateChanged -= _poller_GamepadStateChanged;
-
-            _logger.LogInformation("Rover gamepad stopped");
-            SetStateStopped();
-        }
-
-        private void SetStateStarted()
-        {
-            lblState.Text = "Started";
-            lblState.ForeColor = Color.Green;
-
-            _isStarted = true;
-        }
-
-        private void SetStateStopped()
-        {
-            lblState.Text = "Stopped";
-            lblState.ForeColor = Color.Red;
-
-            lblAcc.Text = string.Empty;
-            lblDir.Text = string.Empty;
-            pbAcc.SetProgressNoAnimation(0);
-            pbDir.SetProgressNoAnimation(0);
-
-            _isStarted = false;
+            if (IsHandleCreated)
+                base.BeginInvoke(action);
         }
     }
 }

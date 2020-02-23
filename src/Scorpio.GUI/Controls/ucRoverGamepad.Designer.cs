@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.lblState = new System.Windows.Forms.Label();
             this.btnStart = new System.Windows.Forms.Button();
             this.btnStop = new System.Windows.Forms.Button();
@@ -54,66 +53,60 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Rover Gamepad";
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Arial", 9F);
-            this.label2.Location = new System.Drawing.Point(247, 64);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(46, 17);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "State:";
-            // 
             // lblState
             // 
             this.lblState.AutoSize = true;
+            this.lblState.BackColor = System.Drawing.SystemColors.Control;
             this.lblState.Font = new System.Drawing.Font("Arial", 9F);
-            this.lblState.Location = new System.Drawing.Point(247, 81);
+            this.lblState.Location = new System.Drawing.Point(231, 56);
             this.lblState.Name = "lblState";
-            this.lblState.Size = new System.Drawing.Size(40, 17);
+            this.lblState.Size = new System.Drawing.Size(13, 17);
             this.lblState.TabIndex = 0;
-            this.lblState.Text = "state";
+            this.lblState.Text = "-";
             // 
             // btnStart
             // 
-            this.btnStart.Location = new System.Drawing.Point(89, 65);
+            this.btnStart.BackColor = System.Drawing.Color.GreenYellow;
+            this.btnStart.ForeColor = System.Drawing.Color.Black;
+            this.btnStart.Location = new System.Drawing.Point(73, 47);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(68, 33);
             this.btnStart.TabIndex = 1;
-            this.btnStart.Text = "Start";
-            this.btnStart.UseVisualStyleBackColor = true;
+            this.btnStart.Text = "Arm";
+            this.btnStart.UseVisualStyleBackColor = false;
             this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
             // 
             // btnStop
             // 
-            this.btnStop.Location = new System.Drawing.Point(163, 65);
+            this.btnStop.BackColor = System.Drawing.Color.PaleVioletRed;
+            this.btnStop.Location = new System.Drawing.Point(147, 48);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(68, 33);
             this.btnStop.TabIndex = 1;
-            this.btnStop.Text = "Stop";
-            this.btnStop.UseVisualStyleBackColor = true;
+            this.btnStop.Text = "Disarm";
+            this.btnStop.UseVisualStyleBackColor = false;
             this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
             // 
             // lblSender
             // 
             this.lblSender.AutoSize = true;
             this.lblSender.Font = new System.Drawing.Font("Arial", 9F);
-            this.lblSender.Location = new System.Drawing.Point(14, 73);
+            this.lblSender.Location = new System.Drawing.Point(14, 55);
             this.lblSender.Name = "lblSender";
-            this.lblSender.Size = new System.Drawing.Size(59, 17);
+            this.lblSender.Size = new System.Drawing.Size(42, 17);
             this.lblSender.TabIndex = 0;
-            this.lblSender.Text = "Sender:";
+            this.lblSender.Text = "Drive";
             // 
             // pbAcc
             // 
-            this.pbAcc.Location = new System.Drawing.Point(106, 127);
+            this.pbAcc.Location = new System.Drawing.Point(73, 95);
             this.pbAcc.Name = "pbAcc";
             this.pbAcc.Size = new System.Drawing.Size(165, 23);
             this.pbAcc.TabIndex = 2;
             // 
             // pbDir
             // 
-            this.pbDir.Location = new System.Drawing.Point(106, 156);
+            this.pbDir.Location = new System.Drawing.Point(73, 127);
             this.pbDir.Name = "pbDir";
             this.pbDir.Size = new System.Drawing.Size(165, 23);
             this.pbDir.TabIndex = 2;
@@ -122,7 +115,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Arial", 9F);
-            this.label3.Location = new System.Drawing.Point(14, 131);
+            this.label3.Location = new System.Drawing.Point(14, 95);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(37, 17);
             this.label3.TabIndex = 0;
@@ -132,7 +125,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Arial", 9F);
-            this.label4.Location = new System.Drawing.Point(14, 160);
+            this.label4.Location = new System.Drawing.Point(14, 127);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(31, 17);
             this.label4.TabIndex = 0;
@@ -142,21 +135,21 @@
             // 
             this.lblDir.AutoSize = true;
             this.lblDir.Font = new System.Drawing.Font("Arial", 9F);
-            this.lblDir.Location = new System.Drawing.Point(283, 156);
+            this.lblDir.Location = new System.Drawing.Point(247, 127);
             this.lblDir.Name = "lblDir";
-            this.lblDir.Size = new System.Drawing.Size(37, 17);
+            this.lblDir.Size = new System.Drawing.Size(13, 17);
             this.lblDir.TabIndex = 0;
-            this.lblDir.Text = "Acc:";
+            this.lblDir.Text = "-";
             // 
             // lblAcc
             // 
             this.lblAcc.AutoSize = true;
             this.lblAcc.Font = new System.Drawing.Font("Arial", 9F);
-            this.lblAcc.Location = new System.Drawing.Point(283, 127);
+            this.lblAcc.Location = new System.Drawing.Point(247, 95);
             this.lblAcc.Name = "lblAcc";
-            this.lblAcc.Size = new System.Drawing.Size(37, 17);
+            this.lblAcc.Size = new System.Drawing.Size(13, 17);
             this.lblAcc.TabIndex = 0;
-            this.lblAcc.Text = "Acc:";
+            this.lblAcc.Text = "-";
             // 
             // cbGamepadIndex
             // 
@@ -187,7 +180,6 @@
             this.Controls.Add(this.btnStart);
             this.Controls.Add(this.lblState);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.label2);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.lblAcc);
             this.Controls.Add(this.lblDir);
@@ -196,7 +188,7 @@
             this.Controls.Add(this.label1);
             this.Font = new System.Drawing.Font("Arial", 9F);
             this.Name = "ucRoverGamepad";
-            this.Size = new System.Drawing.Size(339, 192);
+            this.Size = new System.Drawing.Size(339, 170);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -205,7 +197,6 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label lblState;
         private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.Button btnStop;

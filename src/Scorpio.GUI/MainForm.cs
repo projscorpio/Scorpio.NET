@@ -52,6 +52,7 @@ namespace Scorpio.GUI
 
             ucVivotekController1.Autofac = _autofac.Resolve<ILifetimeScope>();
             ucVivotekController1.VivotekId = "vivotek1";
+            ucRoverGamepad1.VivotekId = "vivotek1";
         }
 
         private void SetupGamepadControls()
@@ -68,7 +69,7 @@ namespace Scorpio.GUI
         }
 
         private CancellationTokenSource _cts;
-        private void btnConnect_Click(object sender, System.EventArgs e)
+        private void btnConnect_Click(object sender, EventArgs e)
         {
             try
             {
@@ -86,7 +87,7 @@ namespace Scorpio.GUI
             }
         }
 
-        private void btnDisconnect_Click(object sender, System.EventArgs e)
+        private void btnDisconnect_Click(object sender, EventArgs e)
         {
             try
             {
