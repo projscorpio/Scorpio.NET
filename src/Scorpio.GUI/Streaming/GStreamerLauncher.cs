@@ -29,17 +29,17 @@ namespace Scorpio.GUI.Streaming
         /// Starts new GStreamer process
         /// </summary>
         /// <param name="arg">GStreamer arguments</param>
-        public void Launch(string arg)
+        public Task<bool> Launch(string arg)
         {
             arg.GuardNotNull(nameof(arg));
 
             if (_processes.ContainsKey(arg))
             {
                 _logger.LogWarning("Cannot start the same process twice.");
-                return;
+                return Task.FromResult(false);
             }
 
-            Task.Factory.StartNew(() => DoStart(_processes, arg));
+            return Task.Factory.StartNew(() => DoStart(_processes, arg));
         }
 
         /// <summary>
@@ -74,22 +74,37 @@ namespace Scorpio.GUI.Streaming
             }
         }
 
-        private void DoStart(Dictionary<string, Process> processes, string arg)
+        private bool DoStart(Dictionary<string, Process> processes, string arg)
         {
-            var process = new Process
+            try
             {
-                StartInfo =
+                var process = new Process
                 {
-                    FileName = "gst-launch-1.0.exe", 
-                    Arguments = arg, 
-                    WindowStyle = ProcessWindowStyle.Maximized
-                }
-            };
+                    StartInfo =
+                    {
+                        FileName = "gst-launch-1.0.exe",
+                        Arguments = arg,
+                        WindowStyle = ProcessWindowStyle.Maximized
+                    }
+                };
 
-            process.Start();
-            processes.Add(arg, process);
+                process.Start();
+                processes.Add(arg, process);
 
-            _logger.LogInformation("GStreamer process was successfully started.", arg);
+                _logger.LogInformation("GStreamer process was successfully started.", arg);
+                return true;
+            }
+            catch (System.ComponentModel.Win32Exception ex)
+            {
+                _logger.LogError(
+                    "Looks like GStreamer is not installed or is not added to the path variable: " + ex.Message, ex);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                return false;
+            }
         }
     }
 }

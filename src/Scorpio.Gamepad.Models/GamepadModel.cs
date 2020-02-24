@@ -7,6 +7,8 @@
     {
         public ThumbStickModel LeftThumbStick { get; set; }
         public ThumbStickModel RightThumbStick { get; set; }
+        public bool IsLeftThumbStickPressed { get; set; }
+        public bool IsRightThumbStickPressed { get; set; }
         public byte LeftTrigger { get; set; }
         public byte RightTrigger { get; set; }
         public bool IsLeftTriggerButtonPressed { get; set; }

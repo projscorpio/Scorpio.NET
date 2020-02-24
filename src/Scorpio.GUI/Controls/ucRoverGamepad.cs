@@ -12,7 +12,9 @@ using System;
 using System.Drawing;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using Scorpio.Gamepad.Models;
 using Scorpio.Instrumentation.Vivotek;
 using Scorpio.Instrumentation.Vivotek.DomeCamera;
 
@@ -20,6 +22,8 @@ namespace Scorpio.GUI.Controls
 {
     public partial class ucRoverGamepad : UserControl
     {
+        public event EventHandler<bool> StateChanged;
+
         private ILifetimeScope _autofac;
         public ILifetimeScope Autofac
         {
@@ -38,9 +42,11 @@ namespace Scorpio.GUI.Controls
         private ILogger<ucRoverGamepad> _logger;
         private int _gamepadIndex;
         private RoverProcessorResult _latestResult;
+        private GamepadModel _lastGamepadModel;
         private CyclicTimer _timer;
         private IEventBus _eventBus;
         private bool _enableSending;
+        private int _accelerationLimit = 200;
 
         #region Vivotek section
         private string _vivotekId;
@@ -118,7 +124,21 @@ namespace Scorpio.GUI.Controls
 
         private void _poller_GamepadStateChanged(object sender, GamepadEventArgs e)
         {
+            if (e.Gamepad.RightThumbStick.Vertical >= short.MaxValue-500 
+                && _lastGamepadModel.RightThumbStick.Vertical < e.Gamepad.RightThumbStick.Vertical)
+            {
+                Task.Factory.StartNew(async () => await Controller.Control(CameraCommand.ZoomIn));
+            }
+
+            if (e.Gamepad.RightThumbStick.Vertical <= -(short.MaxValue - 500)
+                && _lastGamepadModel.RightThumbStick.Vertical > e.Gamepad.RightThumbStick.Vertical)
+            {
+                Task.Factory.StartNew(async () => await Controller.Control(CameraCommand.ZoomOut));
+            }
+
             _latestResult = _gamepadProcessor.Process(e.Gamepad);
+            _latestResult.Acceleration = ScalingUtils.SymmetricalConstrain(_latestResult.Acceleration, _accelerationLimit);
+            _lastGamepadModel = e.Gamepad;
             UpdateResultWidgets(_latestResult);
         }
 
@@ -128,10 +148,11 @@ namespace Scorpio.GUI.Controls
                 // -200 200 rot hack (progress bar would crash over -100:100 range)
                 // so limit it to -100:100
                 var limitedRot = ScalingUtils.SymmetricalConstrain((int)(result.Direction * 1000), 100);
+                var acceleration = (int)result.Acceleration + 800;
 
                 lblAcc.Text = result.Acceleration.ToString("0.##");
                 lblDir.Text = result.Direction.ToString("0.##");
-                pbAcc.SetProgressNoAnimation((int)result.Acceleration + 800); // Progress bar has range 0-1600, shift + 800
+                pbAcc.SetProgressNoAnimation(acceleration); // Progress bar has range 0-1600, shift + 800
                 pbDir.SetProgressNoAnimation((int)limitedRot + 100); // Progress bar has range 0-200, shift + 100
             });
 
@@ -148,6 +169,7 @@ namespace Scorpio.GUI.Controls
             SetStateStarted();
             _enableSending = true;
             _logger.LogInformation($"Rover gamepad started with index: {_gamepadIndex}");
+            StateChanged?.Invoke(this, true);
         }
 
         private void btnStop_Click(object sender, EventArgs e)
@@ -162,6 +184,7 @@ namespace Scorpio.GUI.Controls
             _timer.Stop();
             _enableSending = false;
             SetStateStopped();
+            StateChanged?.Invoke(this, false);
         }
 
         private void SetupGamepadPoller()
@@ -173,13 +196,14 @@ namespace Scorpio.GUI.Controls
             _poller.DPadRightChanged += async (_, isPressed) => { if (isPressed) await Controller.Control(CameraCommand.Right); };
             _poller.DPadUpChanged += async (_, isPressed) => { if (isPressed) await Controller.Control(CameraCommand.Up); };
             _poller.DPadDownChanged += async (_, isPressed) => { if (isPressed) await Controller.Control(CameraCommand.Down); };
+            _poller.RightThumbStickPressedChanged += async (_, isPressed) => {  if(isPressed) await Controller.Control(CameraCommand.Home); };
         }
 
         private void TimerElapsedAction()
         {
             if (!_enableSending || _latestResult is null) return;
 
-            var msg = new RoverControlCommand(_latestResult.Direction, _latestResult.Acceleration * 8.0f);
+            var msg = new RoverControlCommand(_latestResult.Direction, _latestResult.Acceleration);
             _eventBus?.Publish(msg);
         }
 
@@ -207,6 +231,13 @@ namespace Scorpio.GUI.Controls
         {
             if (IsHandleCreated)
                 base.BeginInvoke(action);
+        }
+
+        private void tbAccLimit_Scroll(object sender, EventArgs e)
+        {
+            var value = ((TrackBar) sender).Value;
+            lblLimit.Text = value.ToString();
+            _accelerationLimit = value;
         }
     }
 }

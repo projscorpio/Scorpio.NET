@@ -1,12 +1,14 @@
-﻿using System;
-using Scorpio.Gamepad.IO.Args;
+﻿using Scorpio.Gamepad.IO.Args;
 using Scorpio.Gamepad.Models;
+using System;
 
 namespace Scorpio.Gamepad.IO
 {
     public interface IGamepadPoller : IDisposable
     {
         event EventHandler<GamepadEventArgs> GamepadStateChanged;
+        event EventHandler<bool> LeftThumbStickPressedChanged;
+        event EventHandler<bool> RightThumbStickPressedChanged;
         event EventHandler<bool> AChanged;
         event EventHandler<bool> BChanged;
         event EventHandler<bool> XChanged;
@@ -17,7 +19,6 @@ namespace Scorpio.Gamepad.IO
         event EventHandler<bool> DPadUpChanged;
         event EventHandler<bool> DPadLeftChanged;
         event EventHandler<bool> DPadRightChanged;
-
         GamepadModel GetState();
         bool IsConnected { get; }
         void Vibrate();

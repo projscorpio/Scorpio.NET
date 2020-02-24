@@ -6,9 +6,11 @@ using Scorpio.Messaging.Abstractions;
 using Scorpio.Messaging.Messages;
 using Scorpio.Messaging.Sockets;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using NLog;
 
 namespace Scorpio.GUI
 {
@@ -36,6 +38,8 @@ namespace Scorpio.GUI
 
             this.AutoScaleMode = AutoScaleMode.Dpi;
             base.Load += (_, __) => RichTextBoxTarget.ReInitializeAllTextboxes(this); // Refresh NLog RichTextBox
+            cbLogLevel.SelectedIndex = 0;
+            ucRoverGamepad1.StateChanged += (_, e) =>toolStripStatusLabel2.Text = $"Rover gamepad: {(e ? "Started!" : "Stopped")}";
         }
 
         private void SetupStreamControl()
@@ -61,11 +65,17 @@ namespace Scorpio.GUI
         }
 
         private void SetupMessaging()
-        { 
-            SocketClient.Connected += (_, __) => _logger.LogInformation("Socket connected!");
-            SocketClient.Disconnected += (_, __) => _logger.LogWarning("Socket disconnected");
-
-            _eventBus.Subscribe<RoverControlCommand, RoverControlCommandEventHandler>("override");
+        {
+            SocketClient.Connected += (_, __) =>
+            {;
+                _logger.LogInformation("Socket client: connected!");
+                toolStripStatusLabel1.Text = "Socket client: connected!";
+            };
+            SocketClient.Disconnected += (_, __) =>
+            {
+                _logger.LogWarning("Socket disconnected");
+                toolStripStatusLabel1.Text = "Socket client: disconnected!";
+            };
         }
 
         private CancellationTokenSource _cts;
@@ -91,21 +101,10 @@ namespace Scorpio.GUI
         {
             try
             {
-                if (_socketClient.IsConnected)
-                {
-                    _socketClient.Disconnect();
-                    _logger.LogInformation("Successfully disconnected!");
-                }
-                else // Still connecting - cancel the task
-                {
-                    if (_cts is null)
-                    {
-                        _logger.LogWarning("You are not connected!");
-                        return;
-                    }
-                    _cts.Cancel(true);
-                }
-
+                _cts?.Cancel(true);
+                _socketClient?.Disconnect();
+                _cts?.Dispose();
+                _logger.LogInformation("Successfully disconnected!");
                 _cts = null;
             }
             catch (Exception ex)
@@ -113,20 +112,16 @@ namespace Scorpio.GUI
                 _logger.LogError(ex.Message, ex);
             }
         }
-    }
 
-    class RoverControlCommandEventHandler : IIntegrationEventHandler<RoverControlCommand>
-    {
-        private readonly ILogger<RoverControlCommandEventHandler> _logger;
+        private void btnClearLogs_Click(object sender, EventArgs e) => logbox.Clear();
 
-        public RoverControlCommandEventHandler(ILogger<RoverControlCommandEventHandler> logger)
+        private void cbLogLevel_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _logger = logger;
-        }
-        public Task Handle(RoverControlCommand @event)
-        {
-            _logger.LogDebug(JsonConvert.SerializeObject(@event));
-            return Task.FromResult(0);
+            var level = ((ComboBox)sender).Text;
+            var rule = LogManager.Configuration.LoggingRules.FirstOrDefault();
+            rule.DisableLoggingForLevels(NLog.LogLevel.Trace, NLog.LogLevel.Fatal);
+            rule.EnableLoggingForLevels(NLog.LogLevel.FromString(level), NLog.LogLevel.Fatal);
+            LogManager.ReconfigExistingLoggers();
         }
     }
 }

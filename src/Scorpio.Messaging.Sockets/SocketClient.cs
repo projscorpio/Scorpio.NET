@@ -19,9 +19,8 @@ namespace Scorpio.Messaging.Sockets
         public event EventHandler<EventArgs> Connected;
         public event EventHandler<EventArgs> Disconnected;
         public bool IsConnected => _client != null && _client.Connected;
-        public bool ShouldBeConnected { get; private set; }
+        private static bool _shouldBeConnected;
 
-        private readonly object _sendSyncLock;
         private TcpClient _client;
         private NetworkWorkersFacade _workersFacade;
 
@@ -48,15 +47,14 @@ namespace Scorpio.Messaging.Sockets
             _loggerFactory = loggerFactory;
             _logger = loggerFactory.CreateLogger<SocketClient>() ?? throw new ArgumentNullException(nameof(loggerFactory));
             _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
-            _sendSyncLock = new object();
         }
 
         public bool TryConnect(CancellationToken cancellationToken)
         {
+            _shouldBeConnected = true;
+
             lock (_syncLock)
             {
-                ShouldBeConnected = true;
-
                 try
                 {
                     Policy
@@ -64,6 +62,8 @@ namespace Scorpio.Messaging.Sockets
                         .WaitAndRetryForever(retryNumber =>
                         {
                             _logger.LogCritical($"Reconnecting: {retryNumber}");
+                            if (!_shouldBeConnected) throw new OperationCanceledException();
+
                             return TimeSpan.FromSeconds(2);
                         })
                         .Execute(token =>
@@ -86,6 +86,7 @@ namespace Scorpio.Messaging.Sockets
                     return true;
                 }
 
+                _shouldBeConnected = false;
                 _logger.LogCritical("FATAL: Socket connections could not connect");
                 return false;
             }
@@ -123,11 +124,15 @@ namespace Scorpio.Messaging.Sockets
 
         public void Enqueue(IntegrationEvent @event)
         {
-            lock (_sendSyncLock)
+            if (!_shouldBeConnected)
             {
-                if (!ShouldBeConnected) return;
+                _logger.LogWarning("Trying to send, but disconnected!");
+                return;
+            }
 
-                if (!IsConnected)
+            lock (_syncLock)
+            {
+                if (!IsConnected && _shouldBeConnected)
                     TryConnect();
 
                 if (Stream != null
@@ -143,7 +148,7 @@ namespace Scorpio.Messaging.Sockets
 
         public void Disconnect()
         {
-            ShouldBeConnected = false;
+            _shouldBeConnected = false;
             OnDisconnected();
             _client?.Close();
             _client = null;
@@ -188,7 +193,7 @@ namespace Scorpio.Messaging.Sockets
             var ex = e?.GetException();
             _logger.LogError($"{sender.GetType().FullName} faulted: " + ex?.Message, ex);
 
-            lock (_sendSyncLock)
+            lock (_syncLock)
             {
                 Disconnect();
                 TryConnect();

@@ -46,15 +46,17 @@ namespace Scorpio.GUI.Controls
             InitializeComponent();
             lblState.Text = STOPPED;
             lblState.BackColor = Color.Red;
+            this.Load += (_, __) => lblStreamId.Text = CameraId;
         }
 
-        private void btnStart_Click(object sender, EventArgs e)
+        private async void btnStart_Click(object sender, EventArgs e)
         {
             var config = CamConfig.GetStreamById(CameraId);
-            GStreamer.Launch(config.GstreamerArg);
-
-            lblState.Text = STARTED;
-            lblState.BackColor = Color.Green;
+            if (await GStreamer.Launch(config.GstreamerArg))
+            {
+                lblState.Text = STARTED;
+                lblState.BackColor = Color.Green;
+            }
         }
 
         private void btnStop_Click(object sender, EventArgs e)

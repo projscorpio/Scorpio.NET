@@ -8,6 +8,8 @@ namespace Scorpio.Gamepad.IO
     public class GamepadPoller : IGamepadPoller
     {
         public event EventHandler<GamepadEventArgs> GamepadStateChanged;
+        public event EventHandler<bool> LeftThumbStickPressedChanged;
+        public event EventHandler<bool> RightThumbStickPressedChanged;
         public event EventHandler<bool> AChanged;
         public event EventHandler<bool> BChanged;
         public event EventHandler<bool> XChanged;
@@ -89,6 +91,12 @@ namespace Scorpio.Gamepad.IO
 
             if (previousState.DPad.IsRightPressed != state.DPad.IsRightPressed)
                 DPadRightChanged?.Invoke(this, state.DPad.IsRightPressed);
+
+            if (previousState.IsLeftThumbStickPressed != state.IsLeftThumbStickPressed)
+                LeftThumbStickPressedChanged?.Invoke(this, state.IsLeftThumbStickPressed);
+
+            if (previousState.IsRightThumbStickPressed != state.IsRightThumbStickPressed)
+                RightThumbStickPressedChanged?.Invoke(this, state.IsRightThumbStickPressed);
         }
 
         private static GamepadModel Map(XInputState state)
@@ -109,6 +117,8 @@ namespace Scorpio.Gamepad.IO
                 RightTrigger = state.Gamepad.bRightTrigger,
                 IsLeftTriggerButtonPressed = GetButtonState(state, ButtonFlags.XINPUT_GAMEPAD_LEFT_SHOULDER),
                 IsRightTriggerButtonPressed = GetButtonState(state, ButtonFlags.XINPUT_GAMEPAD_RIGHT_SHOULDER),
+                IsLeftThumbStickPressed = GetButtonState(state, ButtonFlags.XINPUT_GAMEPAD_LEFT_THUMB),
+                IsRightThumbStickPressed = GetButtonState(state, ButtonFlags.XINPUT_GAMEPAD_RIGHT_THUMB),
                 IsAPressed = GetButtonState(state, ButtonFlags.XINPUT_GAMEPAD_A),
                 IsBPressed = GetButtonState(state, ButtonFlags.XINPUT_GAMEPAD_B),
                 IsXPressed = GetButtonState(state, ButtonFlags.XINPUT_GAMEPAD_X),
