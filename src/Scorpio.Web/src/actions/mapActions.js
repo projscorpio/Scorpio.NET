@@ -7,8 +7,9 @@ export function setMapMarkers(markers) {
   };
 }
 
-export function fetchRoverPosition() {
+export function setRoverPosition(latlon) {
   return {
-    type: types.FETCH_ROVER_POSITION,
+    type: types.SET_ROVER_POSITION,
+    payload: latlon
   };
 }

@@ -38,19 +38,26 @@ class MapWidget extends Component {
     return <CircleMarker center={[this.state.roverPosition.latitude, this.state.roverPosition.longitude]}
                          radius={iconSizes} />;
 
-  }
+  };
 
   constructor(props) {
     super(props);
-    console.log("props");
-    console.log(props);
     this.state = { markers: this.props.markers, popup: false, roverPosition: this.props.roverPosition }
   }
 
+  fakePositionFetch = () => fetch('http://railgunpat.com:8080/pull', {
+    method: 'GET'
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .then((myJson) => {
+      const newRoverPosition = {latitude: myJson.lat, longitude: myJson.lon}
+      this.setState({roverPosition: newRoverPosition}, ()=> this.props.actions.setRoverPosition(newRoverPosition));
+    });
+
   componentDidMount(props) {
-    console.log("this.state");
-    console.log(this.state);
-    this.updateJob = setInterval(this.props.actions.fetchRoverPosition, 2000);
+    this.updateJob = setInterval(this.fakePositionFetch, 2000);
     this.props.actions.setMapMarkers(this.state.markers);
   }
 
@@ -139,8 +146,6 @@ class MapWidget extends Component {
 }
 
 function mapStateToProps(state) {
-  console.log("state");
-  console.log(state);
   return { markers: state.map.markers, roverPosition: state.map.roverPosition };
 }
 
