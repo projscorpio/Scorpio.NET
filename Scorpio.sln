@@ -39,6 +39,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{3EBF
 	ProjectSection(SolutionItems) = preProject
 		scripts\deploy_web.ps1 = scripts\deploy_web.ps1
 		scripts\installConfigureRabbitMq.sh = scripts\installConfigureRabbitMq.sh
+		scripts\mongodb_userful_stuff.sh = scripts\mongodb_userful_stuff.sh
 		scripts\releaseWebAndCopyToApiWwwroot.ps1 = scripts\releaseWebAndCopyToApiWwwroot.ps1
 	EndProjectSection
 EndProject

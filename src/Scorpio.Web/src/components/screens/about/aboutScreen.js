@@ -16,6 +16,10 @@ class AboutScreen extends Component {
     }
   }
   render() {
+    const mode = process.env.NODE_ENV;
+    const publicUrl = process.env.PUBLIC_URL;
+    let apiEndpoint = process.env.REACT_APP_BACKEND_URL;
+    if (!apiEndpoint) apiEndpoint = "/";
     let { apiInfo } = this.state;
     const swaggerUrl = process.env.REACT_APP_BACKEND_URL + "/swagger";
     if (apiInfo) apiInfo = JSON.stringify(apiInfo, null, 1);
@@ -24,6 +28,11 @@ class AboutScreen extends Component {
       <div style={{ marginTop: "80px" }}>
         <Grid textAlign="center" style={{ height: "100%", maxWidth: "500px", margin: "auto" }} verticalAlign="middle">
           <Grid.Row>
+            <Header as="h1">
+              <div> Built env: {mode}</div> <div>API endpoint: {apiEndpoint}</div>
+            </Header>
+          </Grid.Row>
+          <Grid.Row>
             <Header as="h1">Scorpio rover control App</Header>
           </Grid.Row>
           <Grid.Row>
@@ -31,7 +40,7 @@ class AboutScreen extends Component {
           </Grid.Row>
           <Grid.Row>
             <a href={swaggerUrl} rel="noopener noreferrer" target="_blank">
-              <Image size="medium" src={process.env.PUBLIC_URL + "/swagger.png"} />
+              <Image size="medium" src={publicUrl + "/swagger.png"} />
             </a>
           </Grid.Row>
           <Grid.Row>

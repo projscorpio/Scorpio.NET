@@ -1,5 +1,5 @@
 {
-    "adress": "127.0.0.1",
-    "server_username": "",
-    "server_password": ""
+    "adress": "jetson1.scorpio.rover",
+    "server_username": "nvidia",
+    "server_password": "scorpiox"
 }

@@ -339,3 +339,4 @@ ASALocalRun/
 # BeatPulse healthcheck temp database
 healthchecksdb
 /src/Scorpio.Api/wwwroot
+deploy.zip
