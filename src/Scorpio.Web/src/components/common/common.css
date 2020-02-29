@@ -76,3 +76,11 @@
 .ui.wide.left {
   max-width: 200px !important;
 }
+
+.margin-bottom-m {
+  margin-bottom: 1em;
+}
+
+.parameter table {
+  width: 100%;
+}

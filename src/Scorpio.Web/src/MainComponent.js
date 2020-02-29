@@ -72,7 +72,7 @@ class MainComponent extends Component {
             <Route exact path="/science/edit/sensor-data/:sensorKey?/:id?" component={SensorDataEditorScreen} />
             <Route exact path="/science/sensor-charts" component={ScienceChartsScreen} />
             <Route exact path="/console" component={ConsoleScreen} />
-            <Route exact path="/can-explorer" component={CanOpenExplorer} />
+            <Route exact path="/can-open-explorer" component={CanOpenExplorer} />
             <Route exact path="/filu" component={FiluRacer} />
             <Route exact path="/not-found" component={NotFound} />
             <Redirect to="/not-found" />

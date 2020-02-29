@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Scorpio.CanOpenEds;
 using Scorpio.CanOpenEds.DTO;
+using Scorpio.Messaging.Abstractions;
+using Scorpio.Messaging.Messages;
 using System;
 using System.Threading.Tasks;
 
@@ -13,10 +15,12 @@ namespace Scorpio.Api.Controllers
     public class CanOpenController : ControllerBase
     {
         private readonly ICanOpenObjectRepository _canOpenObjectRepository;
+        private readonly IEventBus _eventBus;
 
-        public CanOpenController(ICanOpenObjectRepository canOpenObjectRepository)
+        public CanOpenController(ICanOpenObjectRepository canOpenObjectRepository, IEventBus eventBus)
         {
             _canOpenObjectRepository = canOpenObjectRepository;
+            _eventBus = eventBus;
         }
 
         [HttpGet("tree")]
@@ -59,6 +63,33 @@ namespace Scorpio.Api.Controllers
             }
 
             return Ok(result);
+        }
+
+        [HttpPost("publish")]
+        [ProducesResponseType(typeof(ServiceResult<object>), 200)]
+        [ProducesResponseType(typeof(ServiceResult<object>), 400)]
+        public IActionResult SendCanOpenObject(SendCanOpenObjectParam canOpenObjectParam)
+        {
+            var result = new ServiceResult<object>();
+
+            try
+            {
+                _eventBus.Publish(new SendCanOpenObjectCommand
+                {
+                    Index = canOpenObjectParam.Index,
+                    SubIndex = canOpenObjectParam.SubIndex,
+                    DataType = canOpenObjectParam.DataType,
+                    Value = canOpenObjectParam.Value
+                });
+
+                result.AddSuccessMessage("Successfully published");
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                result.AddErrorMessage(ex.Message);
+                return BadRequest(result);
+            }
         }
     }
 }
