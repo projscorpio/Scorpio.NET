@@ -35,7 +35,7 @@ const UbiquitiWidget = () => {
           {Object.keys(data).map(key => {
             return (
               <li style={{ fontWeight: 600 }} key={key}>
-                {data[key]}
+                {key}: {data[key]}
               </li>
             );
           })}

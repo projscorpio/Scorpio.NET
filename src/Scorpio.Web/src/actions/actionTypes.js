@@ -8,3 +8,5 @@ export const DELETE_CONFIG = "DELETE_CONFIG";
 export const SET_SENSORS = "SET_SENSORS";
 
 export const SET_STREAMS = "SET_STREAMS";
+
+export const SET_CAN_OPEN_TREE = "SET_CAN_OPEN_TREE";

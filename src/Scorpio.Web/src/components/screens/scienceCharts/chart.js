@@ -46,7 +46,9 @@ const Chart = ({ sensor, data }) => {
     };
 
     // Y axis
-    chart.yAxes.push(new am4charts.ValueAxis());
+    let yAxis = new am4charts.ValueAxis();
+    yAxis.min = 0;
+    chart.yAxes.push(yAxis);
 
     // Y series
     let series = chart.series.push(new am4charts.LineSeries());
@@ -55,6 +57,7 @@ const Chart = ({ sensor, data }) => {
     series.fillOpacity = 0.3;
     series.strokeWidth = 1.5;
     series.minBulletDistance = 10;
+    series.minY = 0;
     series.tooltip.label.interactionsEnabled = true;
     series.tooltip.pointerOrientation = "vertical";
     series.tooltipHTML = `<center><strong>{valueY}</strong></center>
@@ -75,6 +78,10 @@ const Chart = ({ sensor, data }) => {
     // Scrollbar
     chart.scrollbarX = new am4charts.XYChartScrollbar();
     chart.scrollbarX.series.push(series);
+
+    // Add vertical scrollbar
+    chart.scrollbarY = new am4core.Scrollbar();
+    chart.scrollbarY.marginLeft = 0;
 
     chart.events.on("datavalidated", function() {
       dateAxis.zoom({ start: 0, end: 1 });

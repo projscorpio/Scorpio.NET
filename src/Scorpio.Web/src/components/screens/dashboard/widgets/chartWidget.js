@@ -30,7 +30,7 @@ const ChartWidget = ({ sensorKey }) => {
   useEffect(() => {
     MessagingService.subscribe(TOPICS.SENSOR_DATA, websocketHandler);
 
-    const endpoint = API.SENSOR_DATA.GET_PAGED_FILTERED.format(sensorKey, 1, 2000);
+    const endpoint = API.SENSOR_DATA.GET_PAGED_FILTERED.format(sensorKey, 1, 1000);
     genericApi(endpoint, "GET").then(result => {
       if (result.response && result.response.ok) {
         setIsFetching(false);
