@@ -52,7 +52,7 @@
             // 
             // btnCenter
             // 
-            this.btnCenter.Location = new System.Drawing.Point(123, 88);
+            this.btnCenter.Location = new System.Drawing.Point(75, 86);
             this.btnCenter.Name = "btnCenter";
             this.btnCenter.Size = new System.Drawing.Size(57, 49);
             this.btnCenter.TabIndex = 0;
@@ -62,7 +62,7 @@
             // 
             // btnUp
             // 
-            this.btnUp.Location = new System.Drawing.Point(123, 33);
+            this.btnUp.Location = new System.Drawing.Point(75, 31);
             this.btnUp.Name = "btnUp";
             this.btnUp.Size = new System.Drawing.Size(57, 49);
             this.btnUp.TabIndex = 0;
@@ -72,7 +72,7 @@
             // 
             // btnLeft
             // 
-            this.btnLeft.Location = new System.Drawing.Point(60, 88);
+            this.btnLeft.Location = new System.Drawing.Point(12, 86);
             this.btnLeft.Name = "btnLeft";
             this.btnLeft.Size = new System.Drawing.Size(57, 49);
             this.btnLeft.TabIndex = 0;
@@ -82,7 +82,7 @@
             // 
             // btnRight
             // 
-            this.btnRight.Location = new System.Drawing.Point(186, 88);
+            this.btnRight.Location = new System.Drawing.Point(138, 86);
             this.btnRight.Name = "btnRight";
             this.btnRight.Size = new System.Drawing.Size(57, 49);
             this.btnRight.TabIndex = 0;
@@ -92,7 +92,7 @@
             // 
             // btnDown
             // 
-            this.btnDown.Location = new System.Drawing.Point(123, 143);
+            this.btnDown.Location = new System.Drawing.Point(75, 141);
             this.btnDown.Name = "btnDown";
             this.btnDown.Size = new System.Drawing.Size(57, 49);
             this.btnDown.TabIndex = 0;
@@ -105,13 +105,13 @@
             this.lblName.AutoSize = true;
             this.lblName.Location = new System.Drawing.Point(3, 7);
             this.lblName.Name = "lblName";
-            this.lblName.Size = new System.Drawing.Size(118, 17);
+            this.lblName.Size = new System.Drawing.Size(99, 15);
             this.lblName.TabIndex = 1;
             this.lblName.Text = "Vivotek controller";
             // 
             // btnFocusFar
             // 
-            this.btnFocusFar.Location = new System.Drawing.Point(65, 218);
+            this.btnFocusFar.Location = new System.Drawing.Point(266, 35);
             this.btnFocusFar.Name = "btnFocusFar";
             this.btnFocusFar.Size = new System.Drawing.Size(70, 34);
             this.btnFocusFar.TabIndex = 0;
@@ -121,7 +121,7 @@
             // 
             // btnFocusNear
             // 
-            this.btnFocusNear.Location = new System.Drawing.Point(204, 218);
+            this.btnFocusNear.Location = new System.Drawing.Point(405, 35);
             this.btnFocusNear.Name = "btnFocusNear";
             this.btnFocusNear.Size = new System.Drawing.Size(70, 34);
             this.btnFocusNear.TabIndex = 0;
@@ -131,7 +131,7 @@
             // 
             // btnFocusAuto
             // 
-            this.btnFocusAuto.Location = new System.Drawing.Point(141, 218);
+            this.btnFocusAuto.Location = new System.Drawing.Point(342, 35);
             this.btnFocusAuto.Name = "btnFocusAuto";
             this.btnFocusAuto.Size = new System.Drawing.Size(57, 34);
             this.btnFocusAuto.TabIndex = 0;
@@ -142,15 +142,15 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(10, 227);
+            this.label1.Location = new System.Drawing.Point(211, 44);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(49, 17);
+            this.label1.Size = new System.Drawing.Size(41, 15);
             this.label1.TabIndex = 1;
             this.label1.Text = "Focus";
             // 
             // btnZoomWide
             // 
-            this.btnZoomWide.Location = new System.Drawing.Point(65, 258);
+            this.btnZoomWide.Location = new System.Drawing.Point(266, 75);
             this.btnZoomWide.Name = "btnZoomWide";
             this.btnZoomWide.Size = new System.Drawing.Size(70, 34);
             this.btnZoomWide.TabIndex = 0;
@@ -160,7 +160,7 @@
             // 
             // btnZoomTele
             // 
-            this.btnZoomTele.Location = new System.Drawing.Point(204, 258);
+            this.btnZoomTele.Location = new System.Drawing.Point(405, 75);
             this.btnZoomTele.Name = "btnZoomTele";
             this.btnZoomTele.Size = new System.Drawing.Size(70, 34);
             this.btnZoomTele.TabIndex = 0;
@@ -171,7 +171,7 @@
             // button10
             // 
             this.button10.Enabled = false;
-            this.button10.Location = new System.Drawing.Point(141, 258);
+            this.button10.Location = new System.Drawing.Point(342, 75);
             this.button10.Name = "button10";
             this.button10.Size = new System.Drawing.Size(57, 34);
             this.button10.TabIndex = 0;
@@ -181,66 +181,66 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(10, 267);
+            this.label2.Location = new System.Drawing.Point(211, 84);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(45, 17);
+            this.label2.Size = new System.Drawing.Size(39, 15);
             this.label2.TabIndex = 1;
             this.label2.Text = "Zoom";
             // 
             // cbPanSpeed
             // 
             this.cbPanSpeed.FormattingEnabled = true;
-            this.cbPanSpeed.Location = new System.Drawing.Point(6, 338);
+            this.cbPanSpeed.Location = new System.Drawing.Point(210, 155);
             this.cbPanSpeed.Name = "cbPanSpeed";
-            this.cbPanSpeed.Size = new System.Drawing.Size(81, 25);
+            this.cbPanSpeed.Size = new System.Drawing.Size(81, 23);
             this.cbPanSpeed.TabIndex = 2;
             // 
             // cbTiltSpeed
             // 
             this.cbTiltSpeed.FormattingEnabled = true;
-            this.cbTiltSpeed.Location = new System.Drawing.Point(110, 338);
+            this.cbTiltSpeed.Location = new System.Drawing.Point(311, 155);
             this.cbTiltSpeed.Name = "cbTiltSpeed";
-            this.cbTiltSpeed.Size = new System.Drawing.Size(81, 25);
+            this.cbTiltSpeed.Size = new System.Drawing.Size(81, 23);
             this.cbTiltSpeed.TabIndex = 2;
             // 
             // cbZoomSpeed
             // 
             this.cbZoomSpeed.FormattingEnabled = true;
-            this.cbZoomSpeed.Location = new System.Drawing.Point(212, 338);
+            this.cbZoomSpeed.Location = new System.Drawing.Point(413, 155);
             this.cbZoomSpeed.Name = "cbZoomSpeed";
-            this.cbZoomSpeed.Size = new System.Drawing.Size(81, 25);
+            this.cbZoomSpeed.Size = new System.Drawing.Size(81, 23);
             this.cbZoomSpeed.TabIndex = 2;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 316);
+            this.label3.Location = new System.Drawing.Point(207, 133);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(78, 17);
+            this.label3.Size = new System.Drawing.Size(67, 15);
             this.label3.TabIndex = 1;
             this.label3.Text = "Pan speed";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(110, 318);
+            this.label4.Location = new System.Drawing.Point(311, 135);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(70, 17);
+            this.label4.Size = new System.Drawing.Size(61, 15);
             this.label4.TabIndex = 3;
             this.label4.Text = "Tilt speed";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(208, 316);
+            this.label5.Location = new System.Drawing.Point(409, 133);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(89, 17);
+            this.label5.Size = new System.Drawing.Size(77, 15);
             this.label5.TabIndex = 4;
             this.label5.Text = "Zoom speed";
             // 
             // ucVivotekController
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.Controls.Add(this.label5);
@@ -265,7 +265,7 @@
             this.Controls.Add(this.btnCenter);
             this.Font = new System.Drawing.Font("Arial", 9F);
             this.Name = "ucVivotekController";
-            this.Size = new System.Drawing.Size(296, 401);
+            this.Size = new System.Drawing.Size(498, 202);
             this.ResumeLayout(false);
             this.PerformLayout();
 

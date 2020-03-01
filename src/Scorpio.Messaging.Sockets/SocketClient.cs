@@ -14,14 +14,15 @@ namespace Scorpio.Messaging.Sockets
 {
     public class SocketClient : ISocketClient
     {
+        private readonly ILoggerFactory _loggerFactory;
         public event EventHandler<MessageReceivedEventArgs> MessageReceived;
         public event EventHandler<EventArgs> Connected;
         public event EventHandler<EventArgs> Disconnected;
         public bool IsConnected => _client != null && _client.Connected;
-        private readonly object _sendSyncLock;
+        private static bool _shouldBeConnected;
+
         private TcpClient _client;
         private NetworkWorkersFacade _workersFacade;
-        private readonly ILifetimeScope _autofac;
 
         private NetworkStream _stream;
         public NetworkStream Stream
@@ -41,17 +42,17 @@ namespace Scorpio.Messaging.Sockets
         private readonly SocketConfiguration _options;
         private readonly object _syncLock = new object();
 
-        public SocketClient(ILifetimeScope autofac, ILogger<SocketClient> logger, IOptions<SocketConfiguration> options)
+        public SocketClient(ILoggerFactory loggerFactory, IOptions<SocketConfiguration> options)
         {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _loggerFactory = loggerFactory;
+            _logger = loggerFactory.CreateLogger<SocketClient>() ?? throw new ArgumentNullException(nameof(loggerFactory));
             _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
-            _autofac = autofac ?? throw new ArgumentNullException(nameof(autofac));
-            _sendSyncLock = new object();
         }
 
-
-        public bool TryConnect(CancellationToken ct)
+        public bool TryConnect(CancellationToken cancellationToken)
         {
+            _shouldBeConnected = true;
+
             lock (_syncLock)
             {
                 try
@@ -61,18 +62,19 @@ namespace Scorpio.Messaging.Sockets
                         .WaitAndRetryForever(retryNumber =>
                         {
                             _logger.LogCritical($"Reconnecting: {retryNumber}");
+                            if (!_shouldBeConnected) throw new OperationCanceledException();
+
                             return TimeSpan.FromSeconds(2);
                         })
                         .Execute(token =>
                         {
                             Connect();
                             token.ThrowIfCancellationRequested();
-                        }, ct);
+                        }, cancellationToken);
                 }
                 catch (OperationCanceledException)
                 {
                     _logger.LogWarning($"Operation {nameof(TryConnect)} was cancelled...");
-                    throw;
                 }
 
                 if (IsConnected)
@@ -84,6 +86,7 @@ namespace Scorpio.Messaging.Sockets
                     return true;
                 }
 
+                _shouldBeConnected = false;
                 _logger.LogCritical("FATAL: Socket connections could not connect");
                 return false;
             }
@@ -121,15 +124,22 @@ namespace Scorpio.Messaging.Sockets
 
         public void Enqueue(IntegrationEvent @event)
         {
-            lock (_sendSyncLock)
+            if (!_shouldBeConnected)
             {
-                if (!IsConnected)
+                _logger.LogWarning("Trying to send, but disconnected!");
+                return;
+            }
+
+            lock (_syncLock)
+            {
+                if (!IsConnected && _shouldBeConnected)
                     TryConnect();
 
                 if (Stream != null
                     && Stream.CanWrite
                     && _workersFacade.SenderStatus == WorkerStatus.Running)
                 {
+                    _logger.LogDebug($"Publishing {JsonConvert.SerializeObject(@event)}");
                     byte[] message = Envelope.Build(@event).Serialize();
                     _workersFacade.Enqueue(message);
                 }
@@ -138,6 +148,7 @@ namespace Scorpio.Messaging.Sockets
 
         public void Disconnect()
         {
+            _shouldBeConnected = false;
             OnDisconnected();
             _client?.Close();
             _client = null;
@@ -159,7 +170,7 @@ namespace Scorpio.Messaging.Sockets
         protected virtual void CreateWorkersFacade()
         {
             _logger.LogInformation("Creating workers facade...");
-            _workersFacade = new NetworkWorkersFacade(_autofac);
+            _workersFacade = new NetworkWorkersFacade(_loggerFactory);
             _workersFacade.NetworkWorkerFaulted += WorkersFacade_NetworkWorkerFaulted;
             _workersFacade.PacketReceived += WorkersFacade_PacketReceived;
             _workersFacade.NetworkStream = Stream;
@@ -182,7 +193,7 @@ namespace Scorpio.Messaging.Sockets
             var ex = e?.GetException();
             _logger.LogError($"{sender.GetType().FullName} faulted: " + ex?.Message, ex);
 
-            lock (_sendSyncLock)
+            lock (_syncLock)
             {
                 Disconnect();
                 TryConnect();

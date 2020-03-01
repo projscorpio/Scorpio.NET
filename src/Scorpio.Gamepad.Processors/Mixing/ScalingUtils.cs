@@ -25,6 +25,19 @@
             return input;
         }
 
+        /// <summary>
+        /// Returns number bounded by param.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="boundary"></param>
+        /// <returns></returns>
+        public static int SymmetricalConstrain(int input, int boundary)
+        {
+            if (input > boundary) input = boundary;
+            if (input < -boundary) input = -boundary;
+            return input;
+        }
+
         public static short ConstrainNonnegative(short input, short constrain)
         {
             if (input < 0) input = 0;

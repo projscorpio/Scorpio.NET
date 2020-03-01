@@ -1,6 +1,9 @@
 ﻿namespace Scorpio.Gamepad.Models
 {
-    public class ThumbstickModel
+    /// <summary>
+    /// Represents joystick's double-axis analog control
+    /// </summary>
+    public class ThumbStickModel
     {
         public short Vertical { get; set; }
         public short Horizontal { get; set; }

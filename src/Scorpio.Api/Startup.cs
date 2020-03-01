@@ -15,19 +15,17 @@ using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using Scorpio.Api.DataAccess;
 using Scorpio.Api.EventHandlers;
-using Scorpio.Api.Events;
 using Scorpio.Api.HostedServices;
 using Scorpio.Api.Hubs;
+using Scorpio.CanOpenEds;
+using Scorpio.CanOpenEds.Extensions.DependencyInjection.Microsoft;
 using Scorpio.Gamepad.Processors;
 using Scorpio.Gamepad.Processors.Mixing;
 using Scorpio.Instrumentation.Ubiquiti;
-using Scorpio.Messaging.Abstractions;
-using Scorpio.Messaging.Messages;
-using Scorpio.Messaging.RabbitMQ;
 using Scorpio.Messaging.Sockets;
 using Scorpio.ProcessRunner;
 using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -35,12 +33,14 @@ namespace Scorpio.Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            Env = env;
         }
 
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment Env { get; }
 
         // ConfigureServices is where you register dependencies. This gets
         // called by the runtime before the ConfigureContainer method, below
@@ -111,7 +111,8 @@ namespace Scorpio.Api
                     ExponentialGamepadProcessor<RoverMixer, RoverProcessorResult>>()
                 .AddUbiquitiPoller(Configuration)
                 .AddHealthChecks(Configuration)
-                .AddHostedService<EventBusHostedService>();
+                .AddHostedService<EventBusHostedService>()
+                .AddCanOpenFileEds(new FileRepositoryConfiguration().WithPath(Path.Combine(Env.ContentRootPath, @"Resources\mcDSA - E25.json")));
         }
 
 

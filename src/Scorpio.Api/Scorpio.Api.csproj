@@ -37,6 +37,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CanOpenModule\Scorpio.CanOpenEds.Extensions.DependencyInjection.Microsoft\Scorpio.CanOpenEds.Extensions.DependencyInjection.Microsoft.csproj" />
+    <ProjectReference Include="..\CanOpenModule\Scorpio.CanOpenEds.FileRepository\Scorpio.CanOpenEds.FileRepository.csproj" />
+    <ProjectReference Include="..\CanOpenModule\Scorpio.CanOpenEds\Scorpio.CanOpenEds.csproj" />
     <ProjectReference Include="..\Scorpio.Gamepad.Models\Scorpio.Gamepad.Models.csproj" />
     <ProjectReference Include="..\Scorpio.Gamepad.Processors\Scorpio.Gamepad.Processors.csproj" />
     <ProjectReference Include="..\Scorpio.Instrumentation.Ubiquiti\Scorpio.Instrumentation.Ubiquiti.csproj" />

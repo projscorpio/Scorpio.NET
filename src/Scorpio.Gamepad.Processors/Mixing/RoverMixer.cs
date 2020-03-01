@@ -50,13 +50,15 @@ namespace Scorpio.Gamepad.Processors.Mixing
         {
             const float deadZone = 0.2f;
 
-            var leftRightStick = ScalingUtils.ShortToFloat(model.LeftThumbstick.Horizontal);
+            var leftRightStick = ScalingUtils.ShortToFloat(model.LeftThumbStick.Horizontal);
 
             if (leftRightStick <= deadZone && leftRightStick >= -deadZone)
                 leftRightStick = 0;
 
+            leftRightStick *= 0.1f; // -0.1:0.1 range
 
-            return ScalingUtils.SymmetricalConstrain(leftRightStick, 1.0f);
+
+            return ScalingUtils.SymmetricalConstrain(leftRightStick, 0.1f);
         }
 
         private static float GetDeltaTriggers(GamepadModel model)
@@ -64,7 +66,7 @@ namespace Scorpio.Gamepad.Processors.Mixing
             var lTrigger = ScalingUtils.ByteToFloat(model.LeftTrigger);
             var rTrigger = ScalingUtils.ByteToFloat(model.RightTrigger);
             var deltaTriggers = rTrigger - lTrigger;
-            return ScalingUtils.SymmetricalConstrain(deltaTriggers, 1.0f) * 100.0f;
+            return ScalingUtils.SymmetricalConstrain(deltaTriggers, 1.0f) * 800.0f; // -800:800 range
         }
 
         private static float GetRotateInSpotDirection(GamepadModel model)

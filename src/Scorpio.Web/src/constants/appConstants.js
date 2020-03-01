@@ -3,6 +3,7 @@ const baseUrl = process.env.REACT_APP_BACKEND_URL;
 
 export const API = {
   ROOT: baseUrl + "/",
+  HOME: baseUrl + "/api/home",
   SIGNALR: baseUrl + "/hub",
   HEALTH: baseUrl + "/health",
   CONFIG: {
@@ -36,6 +37,10 @@ export const API = {
     UPDATE: baseUrl + "/api/stream/{0}",
     ADD: baseUrl + "/api/stream",
     DELETE: baseUrl + "/api/stream/{0}"
+  },
+  CAN_OPEN: {
+    GET_TREE: baseUrl + "/api/canOpen/tree",
+    GET_OBJECT: baseUrl + "/api/canOpen/{0}/{1}"
   }
 };
 

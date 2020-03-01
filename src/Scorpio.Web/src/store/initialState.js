@@ -1,5 +1,8 @@
 export default {
   configs: [],
   sensors: [],
-  streams: []
+  streams: [],
+  canOpen: {
+    tree: []
+  }
 };

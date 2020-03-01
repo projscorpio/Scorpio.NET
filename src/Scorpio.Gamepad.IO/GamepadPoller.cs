@@ -5,23 +5,27 @@ using System;
 
 namespace Scorpio.Gamepad.IO
 {
-    public interface IGamepadPoller : IDisposable
-    {
-        event EventHandler<GamepadEventArgs> GamepadStateChanged;
-        GamepadModel GetState();
-        bool IsConnected { get; }
-        void StartPolling();
-        void StopPolling();
-        void Vibrate();
-    }
-
     public class GamepadPoller : IGamepadPoller
     {
         public event EventHandler<GamepadEventArgs> GamepadStateChanged;
+        public event EventHandler<bool> LeftThumbStickPressedChanged;
+        public event EventHandler<bool> RightThumbStickPressedChanged;
+        public event EventHandler<bool> AChanged;
+        public event EventHandler<bool> BChanged;
+        public event EventHandler<bool> XChanged;
+        public event EventHandler<bool> YChanged;
+        public event EventHandler<bool> BackChanged;
+        public event EventHandler<bool> StartChanged;
+        public event EventHandler<bool> DPadDownChanged;
+        public event EventHandler<bool> DPadUpChanged;
+        public event EventHandler<bool> DPadLeftChanged;
+        public event EventHandler<bool> DPadRightChanged;
+
         public bool IsConnected => _controller?.IsConnected ?? false;
 
         private readonly XboxController _controller;
         private GamepadModel _gamepadState;
+        private GamepadModel _previousState;
 
         public GamepadPoller(int controllerIndex) : this(controllerIndex, 50) { }
 
@@ -29,15 +33,16 @@ namespace Scorpio.Gamepad.IO
         {
             _controller = XboxController.RetrieveController(controllerIndex);
             XboxController.UpdateFrequency = updateFrequency;
+            StartPolling();
         }
 
-        public void StartPolling()
+        private void StartPolling()
         {
             _controller.StateChanged += StateChanged;
             XboxController.StartPolling();
         }
 
-        public void StopPolling()
+        private void StopPolling()
         {
             _controller.StateChanged -= StateChanged;
             XboxController.StopPolling();
@@ -58,32 +63,86 @@ namespace Scorpio.Gamepad.IO
 
             // Fire event
             GamepadStateChanged?.Invoke(this, args);
+            ProcessButtonsChangeEvents(_gamepadState, _previousState);
+
+            _previousState = _gamepadState;
+        }
+
+        private void ProcessButtonsChangeEvents(GamepadModel state, GamepadModel previousState)
+        {
+            if (previousState is null) return;
+
+            if (previousState.IsAPressed != state.IsAPressed) AChanged?.Invoke(this, state.IsAPressed);
+            if (previousState.IsBPressed != state.IsAPressed) BChanged?.Invoke(this, state.IsBPressed);
+            if (previousState.IsXPressed != state.IsXPressed) XChanged?.Invoke(this, state.IsXPressed);
+            if (previousState.IsYPressed != state.IsYPressed) YChanged?.Invoke(this, state.IsYPressed);
+
+            if (previousState.IsBackPressed != state.IsBackPressed) BackChanged?.Invoke(this, state.IsBackPressed);
+            if (previousState.IsStartPressed != state.IsStartPressed) StartChanged?.Invoke(this, state.IsStartPressed);
+
+            if (previousState.DPad.IsDownPressed != state.DPad.IsDownPressed)
+                DPadDownChanged?.Invoke(this, state.DPad.IsDownPressed);
+
+            if (previousState.DPad.IsUpPressed != state.DPad.IsUpPressed)
+                DPadUpChanged?.Invoke(this, state.DPad.IsUpPressed);
+
+            if (previousState.DPad.IsLeftPressed != state.DPad.IsLeftPressed)
+                DPadLeftChanged?.Invoke(this, state.DPad.IsLeftPressed);
+
+            if (previousState.DPad.IsRightPressed != state.DPad.IsRightPressed)
+                DPadRightChanged?.Invoke(this, state.DPad.IsRightPressed);
+
+            if (previousState.IsLeftThumbStickPressed != state.IsLeftThumbStickPressed)
+                LeftThumbStickPressedChanged?.Invoke(this, state.IsLeftThumbStickPressed);
+
+            if (previousState.IsRightThumbStickPressed != state.IsRightThumbStickPressed)
+                RightThumbStickPressedChanged?.Invoke(this, state.IsRightThumbStickPressed);
         }
 
         private static GamepadModel Map(XInputState state)
         {
             return new GamepadModel
             {
-                LeftThumbstick = new ThumbstickModel
+                LeftThumbStick = new ThumbStickModel
                 {
                     Vertical = state.Gamepad.sThumbLY,
                     Horizontal = state.Gamepad.sThumbLX
                 },
-                RightThumbstick = new ThumbstickModel
+                RightThumbStick = new ThumbStickModel
                 {
                     Horizontal = state.Gamepad.sThumbRX,
                     Vertical = state.Gamepad.sThumbRY
                 },
                 LeftTrigger = state.Gamepad.bLeftTrigger,
                 RightTrigger = state.Gamepad.bRightTrigger,
-                IsLeftTriggerButtonPressed = state.Gamepad.IsButtonPressed((int)ButtonFlags.XINPUT_GAMEPAD_LEFT_SHOULDER),
-                IsRightTriggerButtonPressed = state.Gamepad.IsButtonPressed((int)ButtonFlags.XINPUT_GAMEPAD_RIGHT_SHOULDER)
+                IsLeftTriggerButtonPressed = GetButtonState(state, ButtonFlags.XINPUT_GAMEPAD_LEFT_SHOULDER),
+                IsRightTriggerButtonPressed = GetButtonState(state, ButtonFlags.XINPUT_GAMEPAD_RIGHT_SHOULDER),
+                IsLeftThumbStickPressed = GetButtonState(state, ButtonFlags.XINPUT_GAMEPAD_LEFT_THUMB),
+                IsRightThumbStickPressed = GetButtonState(state, ButtonFlags.XINPUT_GAMEPAD_RIGHT_THUMB),
+                IsAPressed = GetButtonState(state, ButtonFlags.XINPUT_GAMEPAD_A),
+                IsBPressed = GetButtonState(state, ButtonFlags.XINPUT_GAMEPAD_B),
+                IsXPressed = GetButtonState(state, ButtonFlags.XINPUT_GAMEPAD_X),
+                IsYPressed = GetButtonState(state, ButtonFlags.XINPUT_GAMEPAD_Y),
+                IsBackPressed = GetButtonState(state, ButtonFlags.XINPUT_GAMEPAD_BACK),
+                IsStartPressed = GetButtonState(state, ButtonFlags.XINPUT_GAMEPAD_START),
+                DPad = new DPadModel
+                {
+                    IsDownPressed = GetButtonState(state, ButtonFlags.XINPUT_GAMEPAD_DPAD_DOWN),
+                    IsUpPressed = GetButtonState(state, ButtonFlags.XINPUT_GAMEPAD_DPAD_UP),
+                    IsLeftPressed = GetButtonState(state, ButtonFlags.XINPUT_GAMEPAD_DPAD_LEFT),
+                    IsRightPressed = GetButtonState(state, ButtonFlags.XINPUT_GAMEPAD_DPAD_RIGHT),
+                }
             };
+        }
+
+        private static bool GetButtonState(XInputState state, ButtonFlags button)
+        {
+            return state.Gamepad.IsButtonPressed((int) button);
         }
 
         public void Dispose()
         {
-            XboxController.StopPolling();
+            StopPolling();
         }
     }
 }
