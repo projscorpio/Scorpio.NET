@@ -24,6 +24,8 @@ using Scorpio.Gamepad.Processors.Mixing;
 using Scorpio.Instrumentation.Ubiquiti;
 using Scorpio.Messaging.Sockets;
 using Scorpio.ProcessRunner;
+using Scorpio.Reporting;
+using Scorpio.Reporting.Pdf;
 using System;
 using System.IO;
 using System.Linq;
@@ -116,6 +118,9 @@ namespace Scorpio.Api
                     .WithMiControlPath(Path.Combine(Env.ContentRootPath, @"Resources\mcDSA - E25.json"))
                     .WithScorpioEdsPath(Path.Combine(Env.ContentRootPath, @"Resources\scorpioCAN.json"))
                 );
+
+            services.AddTransient<PdfCreator>();
+            services.AddTransient<IReportBuilder, ReportBuilder>();
         }
 
 
