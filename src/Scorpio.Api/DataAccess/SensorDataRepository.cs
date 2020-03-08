@@ -15,15 +15,21 @@ namespace Scorpio.Api.DataAccess
 
         public async Task<long> RemoveRange(string sensorKey, DateTime? from, DateTime? to)
         {
-            var dateFrom = from ?? new DateTime();
-            var dateTo = to ?? DateTime.UtcNow;
+            FilterDefinition<SensorData> filter = Builders<SensorData>.Filter.Eq("SensorKey", sensorKey);
 
-            var builder = Builders<SensorData>.Filter;
+            // Specified either from od to date
+            // If 'to' date is not specified, default to now,
+            // that means we wont delete future entries if no 'to' date is specifeid explicitly
+            if (from.HasValue || to.HasValue)
+            {
+                var dateFrom = from ?? new DateTime();
+                var dateTo = to ?? DateTime.UtcNow;
 
-            var dateFilters = builder.Lte("TimeStamp", new BsonDateTime(dateTo)) 
-                              & builder.Gte("TimeStamp", new BsonDateTime(dateFrom));
+                var dateFilters = Builders<SensorData>.Filter.Lte("TimeStamp", new BsonDateTime(dateTo))
+                  & Builders<SensorData>.Filter.Gte("TimeStamp", new BsonDateTime(dateFrom));
 
-            var filter = builder.Eq("SensorKey", sensorKey) & dateFilters;
+                filter &= dateFilters;
+            }
 
             var result = await Collection.DeleteManyAsync(filter);
             return result.DeletedCount;

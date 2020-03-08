@@ -37,7 +37,7 @@ const CanOpenExplorer = ({ history }) => {
     <Grid stackable>
       <Grid.Row>
         <Grid.Column style={{ paddingRight: "5px" }} mobile={16} tablet={6} computer={3}>
-          <div style={{ maxHeight: "95vh", overflowY: "scroll" }}>
+          <div style={{ minHeight: "95vh", maxHeight: "95vh", overflowY: "scroll" }}>
             <TreeMenu data={nodes} onClickItem={onClickItem} />
           </div>
         </Grid.Column>
