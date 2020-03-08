@@ -112,7 +112,10 @@ namespace Scorpio.Api
                 .AddUbiquitiPoller(Configuration)
                 .AddHealthChecks(Configuration)
                 .AddHostedService<EventBusHostedService>()
-                .AddCanOpenFileEds(new FileRepositoryConfiguration().WithPath(Path.Combine(Env.ContentRootPath, @"Resources\mcDSA - E25.json")));
+                .AddCanOpenFileEds(new FileRepositoryConfiguration()
+                    .WithMiControlPath(Path.Combine(Env.ContentRootPath, @"Resources\mcDSA - E25.json"))
+                    .WithScorpioEdsPath(Path.Combine(Env.ContentRootPath, @"Resources\scorpioCAN.json"))
+                );
         }
 
 

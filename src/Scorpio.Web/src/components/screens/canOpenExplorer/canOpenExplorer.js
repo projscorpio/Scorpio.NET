@@ -16,12 +16,12 @@ const CanOpenExplorer = ({ history }) => {
   const [nodes, setNodes] = useState([]);
 
   useEffect(() => {
-    if (canOpenState.tree.length === 0) {
+    if (canOpenState.miControlCanTree.length === 0) {
       genericApi(API.CAN_OPEN.GET_TREE, "GET").then(resp => {
         dispatch(canOpenActions.setCanOpenTree(resp.body.data.items));
       });
     } else {
-      const mappedTree = mapStateTreeToRenderableTree(canOpenState.tree);
+      const mappedTree = mapStateTreeToRenderableTree(canOpenState.miControlCanTree);
       setNodes(mappedTree);
     }
   }, [canOpenState]);
@@ -42,7 +42,11 @@ const CanOpenExplorer = ({ history }) => {
           </div>
         </Grid.Column>
         <Grid.Column style={{ paddingLeft: "0" }} tablet={10} computer={13}>
-          <CanOpenDescription />
+          <CanOpenDescription
+            publishUrl={API.CAN_OPEN.PUBLISH}
+            getUrl={API.CAN_OPEN.GET_OBJECT}
+            emptyMessage={"This page allows you to browse through CAN Open API (miControl) and issue basic commands. "}
+          />
         </Grid.Column>
       </Grid.Row>
     </Grid>

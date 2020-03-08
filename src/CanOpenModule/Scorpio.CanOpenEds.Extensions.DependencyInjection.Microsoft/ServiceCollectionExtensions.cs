@@ -13,13 +13,22 @@ namespace Scorpio.CanOpenEds.Extensions.DependencyInjection.Microsoft
             if (serviceCollection is null)
                 throw new ArgumentException(nameof(IServiceCollection));
 
-            serviceCollection.AddSingleton<ICanOpenObjectRepository, CanObjectFileRepository>(provider =>
+            serviceCollection.AddSingleton<ICanOpenObjectRepository, MiControlCanObjectFileRepository>(provider =>
             {
                 var logger = provider.GetRequiredService<ILogger<CanObjectFileRepository>>();
                 var memoryCache = provider.GetRequiredService<IMemoryCache>();
 
-                return new CanObjectFileRepository(logger, memoryCache, config);
+                return new MiControlCanObjectFileRepository(logger, memoryCache, config.MiControlJsonEdsPath);
             });
+
+            serviceCollection.AddSingleton<IScorpioCanOpenObjectRepository, ScorpioCanObjectFileRepository>(provider =>
+            {
+                var logger = provider.GetRequiredService<ILogger<CanObjectFileRepository>>();
+                var memoryCache = provider.GetRequiredService<IMemoryCache>();
+
+                return new ScorpioCanObjectFileRepository(logger, memoryCache, config.ScorpioCanJsonEdsPath);
+            });
+
 
             return serviceCollection;
         }

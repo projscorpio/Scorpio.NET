@@ -39,7 +39,8 @@ const MenuItems = ({ onClick }) => {
           <Dropdown.Menu>
             <Dropdown.Item icon="microchip" label="Sensorics" name="/edit/sensor" as="a" onClick={onClick} />
             <Dropdown.Item icon="video" label="Streams" name="/edit/stream" as="a" onClick={onClick} />
-            <Dropdown.Item icon="database" label="CAN Open Explorer" name="/can-open-explorer" as="a" onClick={onClick} />{" "}
+            <Dropdown.Item icon="database" label="CAN Explorer" name="/can-open-explorer" as="a" onClick={onClick} />{" "}
+            <Dropdown.Item icon="database" label="Scorpio CAN Explorer" name="/scorpio-can-open-explorer" as="a" onClick={onClick} />{" "}
             <Dropdown.Item icon="terminal" label="Console" name="/console" as="a" onClick={onClick} />
           </Dropdown.Menu>
         </Dropdown>

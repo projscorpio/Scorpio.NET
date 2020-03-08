@@ -69,6 +69,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scorpio.CanOpenEds.Extensio
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scorpio.CanOpenEds.FileRepository", "src\CanOpenModule\Scorpio.CanOpenEds.FileRepository\Scorpio.CanOpenEds.FileRepository.csproj", "{29AB5A15-B0B4-432A-95A7-8848D932B77C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CanScorpioModule", "CanScorpioModule", "{0E947AE1-2B70-4DA9-B256-13707FA128B4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

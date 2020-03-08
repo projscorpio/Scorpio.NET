@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Spinner from "../../common/spinner";
 import { genericApi } from "../../../api/genericApi";
-import { API } from "../../../constants/appConstants";
 import { convertBase64DescriptionToRenderableHtml } from "./htmlHelper";
 import Collapsible from "../../common/collapsible";
 import CanOpenTryItEditor from "./canOpenTryItEditor";
@@ -10,7 +9,7 @@ import { ObjectAsListRenderer } from "../../common/listRenderer";
 import { getKeyByValue, dataTypeDict } from "./canOpenDictionaries";
 import { withRouter } from "react-router-dom";
 
-const CanOpenDescription = ({ location }) => {
+const CanOpenDescription = ({ location, emptyMessage, publishUrl, getUrl }) => {
   const [param, setParam] = useState({});
   const [showSpinner, setShowSpinner] = useState(false);
 
@@ -28,13 +27,13 @@ const CanOpenDescription = ({ location }) => {
 
   const fetchRenderObject = async (index, subIndex) => {
     setShowSpinner(true);
-    const resp = await genericApi(API.CAN_OPEN.GET_OBJECT.format(index, subIndex), "GET");
+    const resp = await genericApi(getUrl.format(index, subIndex), "GET");
     setParam(resp.body.data);
     setShowSpinner(false);
   };
 
   const onTryItSubmit = async data => {
-    console.log(data);
+    await genericApi(publishUrl, "POST", data);
   };
 
   const htmlDesc = convertBase64DescriptionToRenderableHtml(param.base64Desc);
@@ -77,7 +76,7 @@ const CanOpenDescription = ({ location }) => {
               )}
             </>
           ) : (
-            <Message>This page allows you to browse through CAN Open API (miControl) and issue basic commands. </Message>
+            <Message>{emptyMessage}</Message>
           )}
         </>
       )}

@@ -2,11 +2,18 @@
 {
     public class FileRepositoryConfiguration
     {
-        public string JsonEdsPath { get; set; }
+        public string MiControlJsonEdsPath { get; set; }
+        public string ScorpioCanJsonEdsPath { get; set; }
 
-        public FileRepositoryConfiguration WithPath(string jsonEdsPath)
+        public FileRepositoryConfiguration WithMiControlPath(string miControlJsonEdsPath)
         {
-            JsonEdsPath = jsonEdsPath;
+            MiControlJsonEdsPath = miControlJsonEdsPath;
+            return this;
+        }
+
+        public FileRepositoryConfiguration WithScorpioEdsPath(string scorpioCanJsonEdsPath)
+        {
+            ScorpioCanJsonEdsPath = scorpioCanJsonEdsPath;
             return this;
         }
     }

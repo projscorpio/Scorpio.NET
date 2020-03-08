@@ -1,0 +1,51 @@
+{
+  "canOpenObjects": [
+    {
+      "base64Desc": null,
+      "label": null,
+      "index": "67fe",
+      "name": "Error behaviour (old)",
+      "objectType": "REC",
+      "memoryType": "RAM",
+      "dataType": "0x00",
+      "accessType": "rw",
+      "PDOmapping": "no",
+      "defaultValue": "",
+      "highValue": "",
+      "lowValue": "",
+      "CANopenSubObject": [
+        {
+          "base64Desc": "",
+          "subIndex": "00",
+          "name": "Number of error classes",
+          "objectType": "VAR",
+          "dataType": "0x05",
+          "accessType": "ro",
+          "PDOmapping": "no",
+          "defaultValue": "3",
+          "highValue": "",
+          "lowValue": "",
+          "TPDOdetectCOS": "false"
+        },
+        {
+          "base64Desc": "",
+          "subIndex": "01",
+          "name": "Communication error",
+          "objectType": "VAR",
+          "dataType": "0x05",
+          "accessType": "rw",
+          "PDOmapping": "no",
+          "defaultValue": "0",
+          "highValue": "2",
+          "lowValue": "0",
+          "TPDOdetectCOS": "false"
+        }
+      ],
+      "subNumber": "4",
+      "accessFunctionName": "",
+      "disabled": "false",
+      "accessFunctionPreCode": "",
+      "TPDOdetectCOS": "false"
+    }
+  ]
+}
