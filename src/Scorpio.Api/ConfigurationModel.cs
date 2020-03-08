@@ -16,5 +16,6 @@
     {
         public string ConnectionString { get; set; }
         public string Database { get; set; }
+        public int SensorDataSamplesToKeep { get; set; } = 1000; // default of 1000
     }
 }

@@ -3,6 +3,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using Scorpio.Api.Models;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Scorpio.Api.DataAccess
@@ -33,6 +34,26 @@ namespace Scorpio.Api.DataAccess
 
             var result = await Collection.DeleteManyAsync(filter);
             return result.DeletedCount;
+        }
+
+        public override async Task<SensorData> CreateAsync(SensorData entity)
+        {
+            var currentDocs = await GetManyFiltered(x => x.SensorKey == entity.SensorKey);
+            var currentCount = currentDocs.Count();
+            var allowedCount = Options.Value.SensorDataSamplesToKeep;
+
+            if (currentCount >= allowedCount)
+            {
+                // Remove oldest ones
+                var docToRemoveIds = currentDocs
+                    .OrderBy(x => x.TimeStamp)
+                    .Take(currentCount - allowedCount + 1)
+                    .Select(x => x.Id);
+
+                await Collection.DeleteManyAsync(x => docToRemoveIds.Contains(x.Id));
+            }
+
+            return await base.CreateAsync(entity);
         }
     }
 }
