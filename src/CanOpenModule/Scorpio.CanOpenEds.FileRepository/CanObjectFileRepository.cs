@@ -13,14 +13,14 @@ namespace Scorpio.CanOpenEds.FileRepository
     {
         private readonly ILogger<CanObjectFileRepository> _logger;
         private readonly IMemoryCache _cache;
-        private readonly FileRepositoryConfiguration _config;
-        private const string TreeCacheKey = "__tree__";
+        private readonly string _edsPath;
+        private string TreeCacheKey => $"{this.GetType().Name}__tree"; // Include type to distinguish derived types
 
-        public CanObjectFileRepository(ILogger<CanObjectFileRepository> logger, IMemoryCache cache, FileRepositoryConfiguration config)
+        public CanObjectFileRepository(ILogger<CanObjectFileRepository> logger, IMemoryCache cache, string edsPath)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(ILogger<CanObjectFileRepository>));
             _cache = cache ?? throw new ArgumentNullException(nameof(IMemoryCache));
-            _config = config ?? throw new ArgumentNullException(nameof(FileRepositoryConfiguration));
+            _edsPath = edsPath ?? throw new ArgumentNullException(nameof(FileRepositoryConfiguration));
         }
         
         public Task<CanOpenObjectResponseDTO> GetCanOpenObjectAsync(string index, string subIndex)
@@ -54,7 +54,7 @@ namespace Scorpio.CanOpenEds.FileRepository
             }
         }
 
-        private static string GetCanObjectCacheKey(string index, string subIndex) => $"{index}__{subIndex ?? ""}";
+        private string GetCanObjectCacheKey(string index, string subIndex) => $"{this.GetType().Name}_{index}__{subIndex ?? ""}";
 
         private static CanOpenObjectResponseDTO MapCanObject(CanOpenSubObjectDTO subObj, CanOpenObjectDTO obj)
         {
@@ -103,7 +103,7 @@ namespace Scorpio.CanOpenEds.FileRepository
 
         private CanOpenObjectRootDTO ReadFileToDomainModel()
         {
-            var text = File.ReadAllText(_config.JsonEdsPath);
+            var text = File.ReadAllText(_edsPath);
             return JsonConvert.DeserializeObject<CanOpenObjectRootDTO>(text);
         }
 

@@ -6,16 +6,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://localhost:8081"
-    },
-    "Docker": {
-      "commandName": "Docker",
-      "environmentVariables": {
-        "ASPNETCORE_URLS": "https://+:443;http://+:80"
-      },
-      "httpPort": 80,
-      "useSSL": false,
-      "sslPort": 443
-    }
+      "applicationUrl": "http://localhost:8080"
+    } 
   }
 }

@@ -6,3 +6,10 @@ export function setCanOpenTree(tree) {
     payload: tree
   };
 }
+
+export function setScorpioCanOpenTree(tree) {
+  return {
+    type: types.SET_SCORPIO_CAN_OPEN_TREE,
+    payload: tree
+  };
+}

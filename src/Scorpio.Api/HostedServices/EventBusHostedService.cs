@@ -34,7 +34,7 @@ namespace Scorpio.Api.HostedServices
                 _socketClient = _autofac.Resolve<ISocketClient>();
                 _socketClient.TryConnect(cancellationToken);
                 _eventBus = _autofac.Resolve<IEventBus>();
-                _eventBus.Subscribe<RoverControlCommand, RoverControlEventHandler>("override");
+
                 _eventBus.Subscribe<SaveSensorDataEvent, SaveSensorDataEventHandler>();
                 _eventBus.Subscribe<SaveManySensorDataEvent, SaveManySensorDataEventHandler>();
                 _eventBus.Subscribe<UbiquitiDataReceivedEvent, UbiquitiDataReceivedEventHandler>();

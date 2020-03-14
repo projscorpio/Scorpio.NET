@@ -24,6 +24,8 @@ using Scorpio.Gamepad.Processors.Mixing;
 using Scorpio.Instrumentation.Ubiquiti;
 using Scorpio.Messaging.Sockets;
 using Scorpio.ProcessRunner;
+using Scorpio.Reporting;
+using Scorpio.Reporting.Pdf;
 using System;
 using System.IO;
 using System.Linq;
@@ -100,7 +102,6 @@ namespace Scorpio.Api
                 .AddTransient<IGenericProcessRunner, GenericProcessRunner>()
                 .AddTransient<SaveSensorDataEventHandler>()
                 .AddTransient<SaveManySensorDataEventHandler>()
-                .AddTransient<RoverControlEventHandler>()
                 .AddTransient<UbiquitiDataReceivedEventHandler>()
                 .AddTransient<IUiConfigurationRepository, UiConfigurationRepository>()
                 .AddTransient<ISensorRepository, SensorRepository>()
@@ -112,7 +113,13 @@ namespace Scorpio.Api
                 .AddUbiquitiPoller(Configuration)
                 .AddHealthChecks(Configuration)
                 .AddHostedService<EventBusHostedService>()
-                .AddCanOpenFileEds(new FileRepositoryConfiguration().WithPath(Path.Combine(Env.ContentRootPath, @"Resources\mcDSA - E25.json")));
+                .AddCanOpenFileEds(new FileRepositoryConfiguration()
+                    .WithMiControlPath(Path.Combine(Env.ContentRootPath, "Resources", "mcDSA - E25.json"))
+                    .WithScorpioEdsPath(Path.Combine(Env.ContentRootPath, "Resources", "scorpioCAN.json"))
+                );
+
+            services.AddTransient<PdfCreator>();
+            services.AddTransient<IReportBuilder, ReportBuilder>();
         }
 
 

@@ -25,6 +25,7 @@ import MessagingService from "./services/MessagingService";
 import FiluRacer from "./components/common/filuRacer";
 import Control from "./components/screens/control/control";
 import CanOpenExplorer from "./components/screens/canOpenExplorer/canOpenExplorer";
+import scorpioCanOpenExplorer from "./components/screens/canOpenExplorer/scorpioCanOpenExplorer";
 
 class MainComponent extends Component {
   async componentDidMount() {
@@ -73,6 +74,7 @@ class MainComponent extends Component {
             <Route exact path="/science/sensor-charts" component={ScienceChartsScreen} />
             <Route exact path="/console" component={ConsoleScreen} />
             <Route exact path="/can-open-explorer" component={CanOpenExplorer} />
+            <Route exact path="/scorpio-can-open-explorer" component={scorpioCanOpenExplorer} />
             <Route exact path="/filu" component={FiluRacer} />
             <Route exact path="/not-found" component={NotFound} />
             <Redirect to="/not-found" />

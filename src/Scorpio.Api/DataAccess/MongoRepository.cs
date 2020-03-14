@@ -12,6 +12,7 @@ namespace Scorpio.Api.DataAccess
     public class MongoRepository<TEntity> : IGenericRepository<TEntity, string> where TEntity : EntityBase
     {
         private IMongoDatabase _database;
+        protected IOptions<MongoDbConfiguration> Options;
         protected IMongoCollection<TEntity> Collection;
 
         public MongoRepository(IOptions<MongoDbConfiguration> options)
@@ -20,6 +21,7 @@ namespace Scorpio.Api.DataAccess
             _database = mongoClient.GetDatabase(options.Value.Database);
             var collectionName = typeof(TEntity).Name;
             Collection = _database.GetCollection<TEntity>(collectionName);
+            Options = options;
         }
 
         public virtual async Task<TEntity> CreateAsync(TEntity entity)

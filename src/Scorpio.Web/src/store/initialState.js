@@ -3,6 +3,7 @@ export default {
   sensors: [],
   streams: [],
   canOpen: {
-    tree: []
+    miControlCanTree: [],
+    scorpioCanTree: []
   }
 };

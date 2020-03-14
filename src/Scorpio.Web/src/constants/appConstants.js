@@ -39,8 +39,14 @@ export const API = {
     DELETE: baseUrl + "/api/stream/{0}"
   },
   CAN_OPEN: {
-    GET_TREE: baseUrl + "/api/canOpen/tree",
-    GET_OBJECT: baseUrl + "/api/canOpen/{0}/{1}"
+    GET_TREE: baseUrl + "/api/MiControlCanOpen/tree",
+    GET_OBJECT: baseUrl + "/api/MiControlCanOpen/{0}/{1}",
+    PUBLISH: baseUrl + "/api/MiControlCanOpen/publish"
+  },
+  SCORPIO_CAN: {
+    GET_TREE: baseUrl + "/api/ScorpioCanOpen/tree",
+    GET_OBJECT: baseUrl + "/api/ScorpioCanOpen/{0}/{1}",
+    PUBLISH: baseUrl + "/api/ScorpioCanOpen/publish"
   }
 };
 

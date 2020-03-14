@@ -3,6 +3,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using Scorpio.Api.Models;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Scorpio.Api.DataAccess
@@ -15,18 +16,44 @@ namespace Scorpio.Api.DataAccess
 
         public async Task<long> RemoveRange(string sensorKey, DateTime? from, DateTime? to)
         {
-            var dateFrom = from ?? new DateTime();
-            var dateTo = to ?? DateTime.UtcNow;
+            FilterDefinition<SensorData> filter = Builders<SensorData>.Filter.Eq("SensorKey", sensorKey);
 
-            var builder = Builders<SensorData>.Filter;
+            // Specified either from od to date
+            // If 'to' date is not specified, default to now,
+            // that means we wont delete future entries if no 'to' date is specifeid explicitly
+            if (from.HasValue || to.HasValue)
+            {
+                var dateFrom = from ?? new DateTime();
+                var dateTo = to ?? DateTime.UtcNow;
 
-            var dateFilters = builder.Lte("TimeStamp", new BsonDateTime(dateTo)) 
-                              & builder.Gte("TimeStamp", new BsonDateTime(dateFrom));
+                var dateFilters = Builders<SensorData>.Filter.Lte("TimeStamp", new BsonDateTime(dateTo))
+                  & Builders<SensorData>.Filter.Gte("TimeStamp", new BsonDateTime(dateFrom));
 
-            var filter = builder.Eq("SensorKey", sensorKey) & dateFilters;
+                filter &= dateFilters;
+            }
 
             var result = await Collection.DeleteManyAsync(filter);
             return result.DeletedCount;
+        }
+
+        public override async Task<SensorData> CreateAsync(SensorData entity)
+        {
+            var currentDocs = await GetManyFiltered(x => x.SensorKey == entity.SensorKey);
+            var currentCount = currentDocs.Count();
+            var allowedCount = Options.Value.SensorDataSamplesToKeep;
+
+            if (currentCount >= allowedCount)
+            {
+                // Remove oldest ones
+                var docToRemoveIds = currentDocs
+                    .OrderBy(x => x.TimeStamp)
+                    .Take(currentCount - allowedCount + 1)
+                    .Select(x => x.Id);
+
+                await Collection.DeleteManyAsync(x => docToRemoveIds.Contains(x.Id));
+            }
+
+            return await base.CreateAsync(entity);
         }
     }
 }
