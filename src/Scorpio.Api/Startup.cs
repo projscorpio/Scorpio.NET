@@ -102,7 +102,6 @@ namespace Scorpio.Api
                 .AddTransient<IGenericProcessRunner, GenericProcessRunner>()
                 .AddTransient<SaveSensorDataEventHandler>()
                 .AddTransient<SaveManySensorDataEventHandler>()
-                .AddTransient<RoverControlEventHandler>()
                 .AddTransient<UbiquitiDataReceivedEventHandler>()
                 .AddTransient<IUiConfigurationRepository, UiConfigurationRepository>()
                 .AddTransient<ISensorRepository, SensorRepository>()
@@ -115,8 +114,8 @@ namespace Scorpio.Api
                 .AddHealthChecks(Configuration)
                 .AddHostedService<EventBusHostedService>()
                 .AddCanOpenFileEds(new FileRepositoryConfiguration()
-                    .WithMiControlPath(Path.Combine(Env.ContentRootPath, @"Resources\mcDSA - E25.json"))
-                    .WithScorpioEdsPath(Path.Combine(Env.ContentRootPath, @"Resources\scorpioCAN.json"))
+                    .WithMiControlPath(Path.Combine(Env.ContentRootPath, "Resources", "mcDSA - E25.json"))
+                    .WithScorpioEdsPath(Path.Combine(Env.ContentRootPath, "Resources", "scorpioCAN.json"))
                 );
 
             services.AddTransient<PdfCreator>();

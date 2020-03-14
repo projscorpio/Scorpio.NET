@@ -2,6 +2,7 @@
 using System;
 using System.Globalization;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace Scorpio.Reporting.Pdf
 {
@@ -31,6 +32,12 @@ namespace Scorpio.Reporting.Pdf
 
         private void SetupRenderer()
         {
+            // Iron-PDF automatically install its required deps on linux
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                IronPdf.Installation.TempFolderPath = "/home/jetson/temp";
+            }
+
             _renderer.PrintOptions.Header = new SimpleHeaderFooter
             {
                 LeftText = "Scorpio Report",
