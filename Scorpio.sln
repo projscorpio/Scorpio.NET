@@ -39,7 +39,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{3EBF
 	ProjectSection(SolutionItems) = preProject
 		scripts\deploy_web.ps1 = scripts\deploy_web.ps1
 		scripts\installConfigureRabbitMq.sh = scripts\installConfigureRabbitMq.sh
-		scripts\mongodb_userful_stuff.sh = scripts\mongodb_userful_stuff.sh
+		scripts\mongodb_userful_stuff.txt = scripts\mongodb_userful_stuff.txt
 		scripts\releaseWebAndCopyToApiWwwroot.ps1 = scripts\releaseWebAndCopyToApiWwwroot.ps1
 	EndProjectSection
 EndProject
@@ -69,15 +69,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scorpio.CanOpenEds.Extensio
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scorpio.CanOpenEds.FileRepository", "src\CanOpenModule\Scorpio.CanOpenEds.FileRepository\Scorpio.CanOpenEds.FileRepository.csproj", "{29AB5A15-B0B4-432A-95A7-8848D932B77C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CanScorpioModule", "CanScorpioModule", "{0E947AE1-2B70-4DA9-B256-13707FA128B4}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ReportingModule", "ReportingModule", "{34EA74F0-B828-43E2-B412-43ACA583E44E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scorpio.Reporting", "src\ReportingModule\Scorpio.Reporting\Scorpio.Reporting.csproj", "{A833B5CC-0F89-4F53-97FE-1096EEBDDA2B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scorpio.Reporting", "src\ReportingModule\Scorpio.Reporting\Scorpio.Reporting.csproj", "{A833B5CC-0F89-4F53-97FE-1096EEBDDA2B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scorpio.Reporting.Tests", "src\ReportingModule\Scorpio.Reporting.Tests\Scorpio.Reporting.Tests.csproj", "{016BCB4A-FD87-4BB8-B913-E418BD97120E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scorpio.Reporting.Tests", "src\ReportingModule\Scorpio.Reporting.Tests\Scorpio.Reporting.Tests.csproj", "{016BCB4A-FD87-4BB8-B913-E418BD97120E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scorpio.Reporting.Pdf", "src\ReportingModule\Scorpio.Reporting.Pdf\Scorpio.Reporting.Pdf.csproj", "{75C389BA-B530-4D52-835B-3E9EF3E424EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scorpio.Reporting.Pdf", "src\ReportingModule\Scorpio.Reporting.Pdf\Scorpio.Reporting.Pdf.csproj", "{75C389BA-B530-4D52-835B-3E9EF3E424EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
