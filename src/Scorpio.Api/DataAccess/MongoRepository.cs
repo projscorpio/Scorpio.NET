@@ -14,14 +14,21 @@ namespace Scorpio.Api.DataAccess
         private IMongoDatabase _database;
         protected IOptions<MongoDbConfiguration> Options;
         protected IMongoCollection<TEntity> Collection;
+        private readonly object _lock = new object();
 
         public MongoRepository(IOptions<MongoDbConfiguration> options)
         {
-            var mongoClient = new MongoClient(options.Value.ConnectionString);
-            _database = mongoClient.GetDatabase(options.Value.Database);
-            var collectionName = typeof(TEntity).Name;
-            Collection = _database.GetCollection<TEntity>(collectionName);
-            Options = options;
+            lock (_lock)
+            {
+                var settings = MongoClientSettings.FromConnectionString(options.Value.ConnectionString);
+                settings.ServerSelectionTimeout = TimeSpan.FromMilliseconds(options.Value.ConnectionTimeoutMs);
+                var mongoClient = new MongoClient(settings);
+
+                _database = mongoClient.GetDatabase(options.Value.Database);
+                var collectionName = typeof(TEntity).Name;
+                Collection = _database.GetCollection<TEntity>(collectionName);
+                Options = options;
+            }
         }
 
         public virtual async Task<TEntity> CreateAsync(TEntity entity)

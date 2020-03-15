@@ -24,5 +24,11 @@ namespace Scorpio.Api.Models
         public string Data { get; set; }
 
         public override string ToString() => Name ?? string.Empty;
+
+        public static class ConfigType
+        {
+            public static string Page = "page";
+            public static string Member = "member";
+        }
     }
 }

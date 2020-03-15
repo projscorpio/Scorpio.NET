@@ -86,7 +86,7 @@ namespace Scorpio.Messaging.Sockets.Workers
 
         private void ExceptionHandler(Task task)
         { 
-            Logger.LogError($"Worker faulted: {task.Exception?.Message}, {task.Exception?.InnerException?.Message}", task.Exception?.ToString());
+            Logger.LogError(task.Exception, $"Worker faulted: {task.Exception?.Message}, {task.Exception?.InnerException?.Message}");
             Status = WorkerStatus.Faulted;
             Task.Delay(500).Wait();
             Start();

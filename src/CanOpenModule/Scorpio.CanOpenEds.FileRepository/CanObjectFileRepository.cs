@@ -49,7 +49,7 @@ namespace Scorpio.CanOpenEds.FileRepository
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error while getting tree from json file: " + ex.Message, ex);
+                _logger.LogError(ex, "Error while getting tree from json file.");
                 throw;
             }
         }
@@ -96,7 +96,7 @@ namespace Scorpio.CanOpenEds.FileRepository
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error while getting tree from json file: " + ex.Message, ex);
+                _logger.LogError(ex, "Error while getting tree from json file.");
                 throw;
             }
         }

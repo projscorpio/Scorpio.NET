@@ -128,7 +128,7 @@ namespace Scorpio.GUI
 
         private static void HandleException(Exception ex)
         {
-            _logger.LogError(ex?.Message, ex?.ToString());
+            _logger.LogError(ex, ex.Message);
         }
     }
 }

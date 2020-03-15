@@ -42,7 +42,7 @@ namespace Scorpio.Messaging.Sockets
             }
             catch (Exception ex)
             {
-                _logger.LogError("Lost connection while writing message: " + ex.Message, ex);
+                _logger.LogError(ex, "Lost connection while writing message");
             }
         }
 

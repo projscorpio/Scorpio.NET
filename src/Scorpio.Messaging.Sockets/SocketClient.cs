@@ -113,12 +113,12 @@ namespace Scorpio.Messaging.Sockets
             }
             catch (SocketException ex)
             {
-                _logger.LogError("Error while connecting to TCP server: " + ex.Message, ex);
+                _logger.LogError(ex, "Error while connecting to TCP server");
                 throw;
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error while connecting to TCP server: " + ex.Message, ex);
+                _logger.LogError(ex, "Error while connecting to TCP server");
             }
         }
 
@@ -191,7 +191,7 @@ namespace Scorpio.Messaging.Sockets
         private void WorkersFacade_NetworkWorkerFaulted(object sender, FaultExceptionEventArgs e)
         {
             var ex = e?.GetException();
-            _logger.LogError($"{sender.GetType().FullName} faulted: " + ex?.Message, ex);
+            _logger.LogError(ex, $"{sender.GetType().FullName} faulted");
 
             lock (_syncLock)
             {

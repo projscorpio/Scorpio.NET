@@ -58,19 +58,19 @@ namespace Scorpio.GUI.Streaming
             }
             catch (KeyNotFoundException ex)
             {
-                _logger.LogError("Given process was not launched using this service", ex);
+                _logger.LogError(ex, "Given process was not launched using this service");
             }
             catch (InvalidOperationException ex)
             {
-                _logger.LogError("Cannot stop process, because it does not exists", ex);
+                _logger.LogError(ex, "Cannot stop process, because it does not exists");
             }
             catch (ArgumentNullException ex)
             {
-                _logger.LogError("Process argument must nut be null", ex);
+                _logger.LogError(ex, "Process argument must nut be null");
             }
             catch (Exception ex)
             {
-                _logger.LogError("Cannot stop process, unknown error", ex);
+                _logger.LogError(ex, "Cannot stop process, unknown error");
             }
         }
 
@@ -96,13 +96,12 @@ namespace Scorpio.GUI.Streaming
             }
             catch (System.ComponentModel.Win32Exception ex)
             {
-                _logger.LogError(
-                    "Looks like GStreamer is not installed or is not added to the path variable: " + ex.Message, ex);
+                _logger.LogError(ex, "Looks like GStreamer is not installed or is not added to the path variable");
                 return false;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
+                _logger.LogError(ex, ex.Message);
                 return false;
             }
         }

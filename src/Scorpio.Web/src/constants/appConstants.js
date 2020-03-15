@@ -4,8 +4,9 @@ const baseUrl = process.env.REACT_APP_BACKEND_URL;
 export const API = {
   ROOT: baseUrl + "/",
   HOME: baseUrl + "/api/home",
-  SIGNALR: baseUrl + "/hub",
-  HEALTH: baseUrl + "/health",
+  SIGNALR: baseUrl + "/api/hub",
+  HEALTH: baseUrl + "/api/health",
+  SWAGGER: baseUrl + "/api/swagger",
   CONFIG: {
     GET_ALL: baseUrl + "/api/configuration",
     POST_NEW: baseUrl + "/api/configuration",

@@ -29,20 +29,23 @@ function doSetConfigs(state, action) {
   try {
     return jsonParseDataProperty(action.payload);
   } catch (err) {
-    AlertDispatcher.dispatchError("CRITICAL: Could not deserialize config from database (not a valid JSON)");
+    const msg = "CRITICAL: Could not deserialize config from database (not a valid JSON)";
+    AlertDispatcher.dispatchError(msg);
+    LogService.error(msg);
+    LogService.error(err);
 
     // self healing
-    removeInvalidConfig(action.payload);
+    removeInvalidConfigs(action.payload);
     return state;
   }
 }
 
-async function removeInvalidConfig(configs) {
+async function removeInvalidConfigs(configs) {
   if (configs && Array.isArray(configs)) {
     for (const config of configs) {
       if (config.id) {
         LogService.info("Trying to self heal by removing invalid config: ", config);
-        genericApi(API.CONFIG.DELETE_BY_ID.format(config.id), "DELETE").then();
+        await genericApi(API.CONFIG.DELETE_BY_ID.format(config.id), "DELETE");
       }
     }
   }

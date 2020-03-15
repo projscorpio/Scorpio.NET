@@ -32,12 +32,12 @@ namespace Scorpio.Api.HostedServices
             catch (OperationCanceledException ex)
             {
                 const string msg = "Could not connect to SNMP host - timeout occured";
-                Logger.LogError(msg, ex.Message, ex.ToString());
+                Logger.LogError(ex, msg);
             }
             catch (Exception ex)
             {
                 const string msg = "Could not connect to SNMP host - make sure it is in the same network";
-                Logger.LogError(msg, ex.Message, ex.ToString());
+                Logger.LogError(ex, msg);
             }
         }
     }
