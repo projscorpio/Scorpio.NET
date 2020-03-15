@@ -1,14 +1,5 @@
 version: "3"
 services:
- rabbitmq:
-    image: "rabbitmq:3-management"
-    container_name: "scorpio_rabbitmq"
-    ports:
-      - "5672:5672"
-      - "8083:15672"
-    volumes:
-      - 'rabbitmq_data:/data'
-
  mongodb:
     image: "mongo:latest"
     container_name: "scorpio_mongodb"
@@ -25,5 +16,4 @@ services:
        - '27017:27017'
 
 volumes:
-  rabbitmq_data:
   mongodb_data:

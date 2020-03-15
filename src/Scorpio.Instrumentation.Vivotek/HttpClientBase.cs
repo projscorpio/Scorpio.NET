@@ -54,11 +54,11 @@ namespace Scorpio.Instrumentation.Vivotek
             }
             catch (HttpRequestException ex)
             {
-                Logger.LogError("Could not communicate with given device", ex);
+                Logger.LogError(ex, "Could not communicate with given device");
             }
             catch (TaskCanceledException ex)
             {
-                Logger.LogError("Timeout occured", ex.Message, ex);
+                Logger.LogError(ex, "Timeout occured");
             }
             catch (Exception ex)
             {

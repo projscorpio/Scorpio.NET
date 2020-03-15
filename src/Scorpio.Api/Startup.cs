@@ -14,6 +14,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using Scorpio.Api.DataAccess;
+using Scorpio.Api.DataAccess.Seeding;
 using Scorpio.Api.EventHandlers;
 using Scorpio.Api.HostedServices;
 using Scorpio.Api.Hubs;
@@ -29,6 +30,7 @@ using Scorpio.Reporting.Pdf;
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Scorpio.Api
@@ -85,6 +87,9 @@ namespace Scorpio.Api
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new OpenApiInfo { Title = "ScorpioAPI", Version = "v1" });
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                options.IncludeXmlComments(xmlPath);
             });
 
             services.AddLogging(opt => { opt.AddConsole(c => { c.TimestampFormat = "[HH:mm:ss:fff] "; }); });
@@ -110,6 +115,7 @@ namespace Scorpio.Api
                 .AddTransient<UbiquitiStatsProvider>()
                 .AddTransient<IGamepadProcessor<RoverMixer, RoverProcessorResult>,
                     ExponentialGamepadProcessor<RoverMixer, RoverProcessorResult>>()
+                .AddTransient<IDbSeeder, DbSeeder>()
                 .AddUbiquitiPoller(Configuration)
                 .AddHealthChecks(Configuration)
                 .AddHostedService<EventBusHostedService>()
@@ -137,31 +143,42 @@ namespace Scorpio.Api
             });
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
-            app.UseSwagger();
+            // i.e. /api/swagger/v1/swagger.json
+            app.UseSwagger(o => o.RouteTemplate = "/api/swagger/{documentName}/swagger.json");
 
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
             // specifying the Swagger JSON endpoint.
-            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"); });
+            // i.e. /api/swagger
+            app.UseSwaggerUI(o => { o.SwaggerEndpoint("/api/swagger/v1/swagger.json", "My API V1"); o.RoutePrefix = "api/swagger"; });
 
             app.UseExceptionHandlingMiddleware();
 
+            // all the api routes starts with /api prefix, others should be redirected to index.html and handled by client
+            // fallback to SPA routing
+            app.UseClientSideFallbackRouting();
+
+            // service index.html etc by default
             app.UseDefaultFiles();
+
+            // servce static files from wwwroot
             app.UseStaticFiles();
 
+            // use API routes
             app.UseRouting();
 
+            // map api routes (health checks, signalR hub, controllers
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<MainHub>("/hub");
-                endpoints.MapHealthChecks("/health", new HealthCheckOptions
+                endpoints.MapHub<MainHub>("/api/hub");
+                endpoints.MapHealthChecks("/api/health", new HealthCheckOptions
                 {
                     Predicate = _ => true,
                     ResponseWriter = WriteHealthResponse
                 });
             });
         }
-        
+
         private static Task WriteHealthResponse(HttpContext context, HealthReport result)
         {
             context.Response.ContentType = "application/json";
@@ -182,6 +199,24 @@ namespace Scorpio.Api
 
     public static class StartupExtensions
     {
+        public static IApplicationBuilder UseClientSideFallbackRouting(this IApplicationBuilder app)
+        {
+            app.Use(async (context, next) =>
+            {
+                await next();
+
+                if (context.Response.StatusCode == 404 &&
+                    !Path.HasExtension(context.Request.Path.Value) &&
+                    !context.Request.Path.Value.StartsWith("/api/"))
+                {
+                    context.Request.Path = "/index.html";
+                    await next();
+                }
+            });
+
+            return app;
+
+        }
         public static IServiceCollection AddUbiquitiPoller(this IServiceCollection services, IConfiguration config)
         {
             var enabled = config.GetValue<bool>("Ubiquiti:EnablePoller");

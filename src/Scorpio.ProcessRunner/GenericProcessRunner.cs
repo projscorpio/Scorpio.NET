@@ -55,9 +55,9 @@ namespace Scorpio.ProcessRunner
                 process.WaitForExit();
                 process.Close();
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                _logger.LogError(e.Message);
+                _logger.LogError(ex, ex.Message);
             }
 
             return stdOutput;

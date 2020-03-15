@@ -164,6 +164,7 @@ namespace Scorpio.GUI.Controls
                 return;
             }
 
+            _eventBus.Publish(new ArmRoverCommand());
             // Start publishing messages
             _timer.Start(20); // send message every x ms
             SetStateStarted();
@@ -181,6 +182,7 @@ namespace Scorpio.GUI.Controls
                 return;
             }
 
+            _eventBus.Publish(new DisarmRoverCommand());
             _timer.Stop();
             _enableSending = false;
             SetStateStopped();
@@ -225,7 +227,6 @@ namespace Scorpio.GUI.Controls
                     pbAcc.SetProgressNoAnimation(0);
                     pbDir.SetProgressNoAnimation(0);
                 });
-        
 
         private void Invoke(Action action)
         {

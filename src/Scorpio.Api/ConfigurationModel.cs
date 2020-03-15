@@ -17,5 +17,6 @@
         public string ConnectionString { get; set; }
         public string Database { get; set; }
         public int SensorDataSamplesToKeep { get; set; } = 1000; // default of 1000
+        public int ConnectionTimeoutMs { get; set; } = 5000; // default of 5 [s]
     }
 }

@@ -21,7 +21,6 @@ class MessagingService {
   subscribe(topic, handler) {
     if (typeof handler !== "function" || typeof topic !== "string") return;
 
-    // con might be null here
     if (this.isConnected()) {
       LogService.info(`SignalR: subscribed to ${topic}`);
       this._connection.on(topic, handler);

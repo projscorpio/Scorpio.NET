@@ -16,13 +16,11 @@ class AboutScreen extends Component {
       this.setState({ apiInfo: result.body });
     }
   }
+
   render() {
     const mode = process.env.NODE_ENV;
     const publicUrl = process.env.PUBLIC_URL;
-    let apiEndpoint = process.env.REACT_APP_BACKEND_URL;
-    if (!apiEndpoint) apiEndpoint = "/";
     let { apiInfo } = this.state;
-    const swaggerUrl = process.env.REACT_APP_BACKEND_URL + "/swagger";
     if (apiInfo) apiInfo = JSON.stringify(apiInfo, null, 1);
 
     return (
@@ -64,7 +62,7 @@ class AboutScreen extends Component {
           <Grid textAlign="center" style={{ height: "100%", maxWidth: "500px", margin: "auto" }} verticalAlign="middle">
             <Grid.Row>
               <Header as="h1">
-                <div> Built env: {mode}</div> <div>API endpoint: {apiEndpoint}</div>
+                <div> Built env: {mode}</div> <div>API endpoint: {API.ROOT}</div>
               </Header>
             </Grid.Row>
             <Grid.Row>
@@ -74,7 +72,7 @@ class AboutScreen extends Component {
               <Header>Created by: Mateusz Kryszczak</Header>
             </Grid.Row>
             <Grid.Row>
-              <a href={swaggerUrl} rel="noopener noreferrer" target="_blank">
+              <a href={API.SWAGGER} rel="noopener noreferrer" target="_blank">
                 <Image size="medium" src={publicUrl + "/swagger.png"} />
               </a>
             </Grid.Row>
