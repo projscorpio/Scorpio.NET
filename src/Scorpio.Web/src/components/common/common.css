@@ -84,3 +84,15 @@
 .parameter table {
   width: 100%;
 }
+
+.scorpio-leaflet-overlay-container {
+  position: fixed !important;
+  z-index: 99999;
+  bottom: 10px;
+  left: 10px;
+  max-width: 200px;
+}
+
+.mrg-left-sm {
+  margin-left: 5px;
+}

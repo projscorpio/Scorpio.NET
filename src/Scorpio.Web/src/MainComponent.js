@@ -26,6 +26,7 @@ import FiluRacer from "./components/common/filuRacer";
 import Control from "./components/screens/control/control";
 import CanOpenExplorer from "./components/screens/canOpenExplorer/canOpenExplorer";
 import scorpioCanOpenExplorer from "./components/screens/canOpenExplorer/scorpioCanOpenExplorer";
+import MapScreen from "./components/screens/map/mapScreen";
 
 class MainComponent extends Component {
   async componentDidMount() {
@@ -60,12 +61,13 @@ class MainComponent extends Component {
   render() {
     return (
       <>
-        <NavBar className="fullWidth">
+        <NavBar className="fullWidth fullHeight">
           <Switch>
             <Route exact path="/" render={_ => <Redirect to={"/dashboard"} />} />
             <Route exact path="/dashboard" component={DashboardScreen} />
             <Route exact path="/stream" component={StreamScreen} />
             <Route exact path="/gamepad" component={GamepadScreen} />
+            <Route exact path="/map" component={MapScreen} />
             <Route exact path="/control" component={Control} />
             <Route exact path="/about" component={AboutScreen} />
             <Route exact path="/edit/sensor" component={SensorsEditorScreen} />
