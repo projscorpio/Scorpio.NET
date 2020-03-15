@@ -51,6 +51,7 @@ class MessagingService {
       return;
     }
 
+    LogService.debug("Sending to topic: " + topic, message);
     this._connection.send(topic, message);
   }
 

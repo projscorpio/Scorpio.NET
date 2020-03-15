@@ -55,6 +55,21 @@ namespace Scorpio.Api.Hubs
             }
 
         }
+
+        [HubMethodName("ArmRover")]
+        public void ArmRover(Dictionary<string, object> data)
+        {
+            _logger.LogWarning($"Received SignalR call to ARM rover");
+            _eventBus.Publish(new ArmRoverCommand());
+        }
+
+        [HubMethodName("DisarmRover")]
+        public void DisarmRover(Dictionary<string, object> data)
+        {
+            _logger.LogWarning($"Received SignalR call to DISARM rover");
+            _eventBus.Publish(new DisarmRoverCommand());
+        }
+
         #endregion
     }
 }
