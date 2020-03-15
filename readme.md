@@ -2,7 +2,13 @@
 
 Clean code & software crafsmanship enthusiast. Software engineer.
 
-![Continous Integration](https://github.com/projscorpio/Scorpio.NET/workflows/ci/badge.svg)
+| App           | Build status|
+| ------------- |:-------------:|
+| Scorpio.Api   | ![Continous Integration](https://github.com/projscorpio/Scorpio.NET/workflows/ci/badge.svg) |
+| Scorpio.Web   | ![frontend.js CI](https://github.com/projscorpio/Scorpio.NET/workflows/frontend.js%20CI/badge.svg)|
+
+
+
 
 ## 1 Installing build tools
 ##### Dotnet SDK 3.0:

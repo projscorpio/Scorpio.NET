@@ -56,5 +56,7 @@ export const TOPICS = {
   SENSOR_DATA: "sensor",
   BATTERY_DATA: "battery",
   UBIQUITI_DATA: "ubiquiti",
-  ROVER_CONTROL: "RoverControlCommand"
+  ROVER_CONTROL: "RoverControlCommand",
+  ROVER_ARM: "ArmRover",
+  ROVER_DISARM: "DisarmRover"
 };

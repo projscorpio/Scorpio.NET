@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import nipplejs from "nipplejs";
 import { Checkbox, Segment } from "semantic-ui-react";
 import { TOPICS } from "../../../constants/appConstants";
-import LogService from "../../../services/LogService";
+import MessagingService from "../../../services/MessagingService";
 
 class Control extends Component {
   constructor(props) {
@@ -37,7 +37,6 @@ class Control extends Component {
         const roverControlCommand = this.buildRoverControlCommand(this.lastVector);
         const limitedRoverControlCommand = this.limitMaxSpeed(roverControlCommand, 0.2137);
         scorpioMessaging.send(TOPICS.ROVER_CONTROL, limitedRoverControlCommand);
-        LogService.debug("Sending control", limitedRoverControlCommand);
       }
     }, 50);
   }
@@ -74,6 +73,15 @@ class Control extends Component {
     };
   }
 
+  onToggle = (ev, data) => {
+    ev.preventDefault();
+    const { checked } = data;
+    this.setState({ enableMovement: checked });
+
+    const topic = checked ? TOPICS.ROVER_ARM : TOPICS.ROVER_DISARM;
+    MessagingService.send(topic, { dummy: "" });
+  };
+
   render() {
     const { x, y, enableMovement } = this.state;
 
@@ -81,12 +89,7 @@ class Control extends Component {
       <div style={{ margin: "1em" }}>
         <Segment className="flex">
           <div className="inline">
-            <Checkbox
-              toggle
-              checked={enableMovement}
-              onChange={_ => this.setState({ enableMovement: !enableMovement })}
-              label={<label>Enable movement</label>}
-            />
+            <Checkbox toggle checked={enableMovement} onChange={this.onToggle} label={<label>Enable movement</label>} />
           </div>
           <div className="inline" style={{ marginLeft: "auto", marginRight: 0 }}>
             X: {x.toFixed(2)} Y: {y.toFixed(2)}
