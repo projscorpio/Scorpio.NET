@@ -28,13 +28,19 @@ namespace Scorpio.Examples.BarbequeueClient
             var socketClient = _container.Resolve<ISocketClient>();
             socketClient.TryConnect();
 
+            double angle = 0;
+
             while (true)
             {
+                angle += 5;
+                if (angle > 350) angle = 0;
                 //var msg = new RoverControlCommand(-14423.1f, 313.11312f);
-                var msg = new GpsDataReceivedEvent {Latitude = 51, Longitude = 16.4};
+                var msg = new GpsDataReceivedEvent {Latitude = 51.107883, Longitude = 17.1};
+                var msg2 = new CompassDataReceivedEvent {Angle = angle};
                 Logger.LogInformation("Publishing...");
                 eventBus.Publish(msg);
-                Thread.Sleep(4000);
+                eventBus.Publish(msg2);
+                Thread.Sleep(3000);
             }
         }
 

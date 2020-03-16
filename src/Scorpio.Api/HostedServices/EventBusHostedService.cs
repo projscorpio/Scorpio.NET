@@ -32,6 +32,7 @@ namespace Scorpio.Api.HostedServices
                 _eventBus.Subscribe<SaveManySensorDataEvent, SaveManySensorDataEventHandler>();
                 _eventBus.Subscribe<UbiquitiDataReceivedEvent, UbiquitiDataReceivedEventHandler>();
                 _eventBus.Subscribe<GpsDataReceivedEvent, GpsDataReceivedEventHandler>("gps");
+                _eventBus.Subscribe<CompassDataReceivedEvent, CompassDataReceivedEventHandler>("compass");
 
                 _socketClient = _autofac.Resolve<ISocketClient>();
                 _socketClient.TryConnect(cancellationToken);
