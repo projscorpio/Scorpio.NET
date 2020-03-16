@@ -209,11 +209,16 @@ namespace Scorpio.Messaging.Sockets
             }
             catch (JsonSerializationException)
             {
-                _logger.LogWarning("Received message, but cannot deserialize (invalid protocol)");
+                _logger.LogWarning("Received message, but cannot deserialize (invalid protocol) - JsonSerializationException");
             }
             catch (JsonReaderException)
             {
-                _logger.LogWarning("Received message, but cannot deserialize (invalid protocol)");
+                _logger.LogWarning("Received message, but cannot deserialize (invalid protocol) - JsonReaderException");
+            }
+            finally
+            {
+                _logger.LogWarning("Invalid packet as UTF8:");
+                _logger.LogWarning(System.Text.Encoding.UTF8.GetString(e.Packet));
             }
         }
 
