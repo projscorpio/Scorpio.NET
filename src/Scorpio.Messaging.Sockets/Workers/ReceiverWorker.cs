@@ -29,10 +29,10 @@ namespace Scorpio.Messaging.Sockets.Workers
 
             try
             {
+                Array.Clear(_data, 0, _data.Length);
+
                 // Receive header first - 4 bytes indicating total packet length
                 length = ReceiveHeader();
-
-                Array.Clear(_data, 0, _data.Length);
 
                 // Receive actual packet
                 ReceivePayload(length);
