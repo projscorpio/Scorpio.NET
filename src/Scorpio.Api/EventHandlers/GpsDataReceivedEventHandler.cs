@@ -51,8 +51,7 @@ namespace Scorpio.Api.EventHandlers
                 await _sensorDataRepository.CreateAsync(sensorDataEntity);
 
                 // Notify clients via SignalR
-                var payload = JsonConvert.SerializeObject(sensorDataEntity.Value);
-                await _hubContext.Clients.All.SendAsync(Constants.Topics.GpsPosition, payload);
+                await _hubContext.Clients.All.SendAsync(Constants.Topics.GpsPosition, sensorDataEntity.Value);
             }
             catch (ValidationException ex)
             {
