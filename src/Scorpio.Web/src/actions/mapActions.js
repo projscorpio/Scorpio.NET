@@ -7,8 +7,23 @@ export function setMapMarkers(markers) {
   };
 }
 
-export function setRoverPosition() {
+export function addMapMarker(marker) {
   return {
-    type: types.SET_ROVER_POSITION
+    type: types.ADD_MAP_MARKER,
+    payload: marker
+  };
+}
+
+export function setRoverPosition(pos) {
+  return {
+    type: types.SET_ROVER_POSITION,
+    payload: pos
+  };
+}
+
+export function setRoverAngle(angle) {
+  return {
+    type: types.SET_ROVER_ANGLE,
+    payload: angle
   };
 }

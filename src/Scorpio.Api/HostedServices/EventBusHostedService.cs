@@ -27,17 +27,20 @@ namespace Scorpio.Api.HostedServices
         {
             // RabbitMQ connection requires connecting - this can be refactored later
             var rabbitMqConnection = _autofac.ResolveOptional<IRabbitMqConnection>();
-            rabbitMqConnection?.TryConnect();
+            if (rabbitMqConnection != null) // rabbit is enabled
+                rabbitMqConnection.TryConnect();
 
             try
             {
-                _socketClient = _autofac.Resolve<ISocketClient>();
-                _socketClient.TryConnect(cancellationToken);
                 _eventBus = _autofac.Resolve<IEventBus>();
 
                 _eventBus.Subscribe<SaveSensorDataEvent, SaveSensorDataEventHandler>();
                 _eventBus.Subscribe<SaveManySensorDataEvent, SaveManySensorDataEventHandler>();
                 _eventBus.Subscribe<UbiquitiDataReceivedEvent, UbiquitiDataReceivedEventHandler>();
+                _eventBus.Subscribe<GpsDataReceivedEvent, GpsDataReceivedEventHandler>("gps");
+
+                _socketClient = _autofac.Resolve<ISocketClient>();
+                _socketClient.TryConnect(cancellationToken);
             }
             catch (OperationCanceledException) { }
 

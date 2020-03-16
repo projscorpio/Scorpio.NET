@@ -16,6 +16,16 @@
             /// Represents data gathered by on-board sensorics
             /// </summary>
             public static string Sensor = "sensor";
+
+            /// <summary>
+            /// Represents current rover position
+            /// </summary>
+            public static string GpsPosition = "gps";
+
+            /// <summary>
+            /// Compass readings
+            /// </summary>
+            public static string Compass = "compass";
         }
     }
 }

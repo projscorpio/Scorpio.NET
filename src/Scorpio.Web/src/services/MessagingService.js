@@ -91,7 +91,7 @@ class MessagingService {
   _processPendingSubsciptions = () => {
     if (this.isConnected() && this._subsQueue.length > 0) {
       LogService.debug("Processing pending subscriptions...", this._subsQueue);
-      for (let i = 0; i <= this._subsQueue.length + 1; i++) {
+      for (let i = 0; i <= this._subsQueue.length; i++) {
         const sub = this._subsQueue.pop();
         this.subscribe(sub.topic, sub.handler);
       }

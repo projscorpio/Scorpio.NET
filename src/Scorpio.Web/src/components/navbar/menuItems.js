@@ -15,11 +15,11 @@ const MenuItems = ({ onClick }) => {
       {/* <Menu.Item name="/stream" as="a" onClick={onClick}>
         <Icon name="video" />
         Stream
-      </Menu.Item>
+      </Menu.Item>*/}
       <Menu.Item name="/map" as="a" onClick={onClick}>
         <Icon name="map" />
         Map
-      </Menu.Item> */}
+      </Menu.Item>
       {/* <Menu.Item name="/gamepad" as="a" onClick={onClick}>
         <Icon name="gamepad" />
         Gamepad

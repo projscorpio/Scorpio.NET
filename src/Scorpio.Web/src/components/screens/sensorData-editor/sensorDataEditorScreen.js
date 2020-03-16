@@ -96,7 +96,15 @@ class SensorDataEditorScreen extends Component {
   };
 
   handleAddClick = () => {
-    this.setState({ editingEntity: null, runWizard: true });
+    let editingEntity = null;
+    const { selectedSensor } = this.state;
+
+    // if filter by some sensor is selected, use this sensor in add wizard
+    if (selectedSensor !== FILTER_ALL_KEY) {
+      editingEntity = { sensorKey: selectedSensor };
+    }
+
+    this.setState({ editingEntity: editingEntity, runWizard: true });
   };
 
   onWizardFinished = async data => {
@@ -168,6 +176,7 @@ class SensorDataEditorScreen extends Component {
                         {renderSensorKeyCol && <Table.HeaderCell>Sensor Key</Table.HeaderCell>}
                         <Table.HeaderCell>Time</Table.HeaderCell>
                         <Table.HeaderCell>Value</Table.HeaderCell>
+                        <Table.HeaderCell>Comment</Table.HeaderCell>
                         <Table.HeaderCell width="2">Actions</Table.HeaderCell>
                       </Table.Row>
                     </Table.Header>
@@ -179,6 +188,7 @@ class SensorDataEditorScreen extends Component {
                             {renderSensorKeyCol && <TableCell>{x.sensorKey}</TableCell>}
                             <TableCell>{x.timeStamp ? new Date(x.timeStamp).toLocaleString() : ""}</TableCell>
                             <TableCell>{x.value}</TableCell>
+                            <TableCell>{x.comment}</TableCell>
                             <TableCell>
                               <Button icon="edit" color="grey" onClick={() => this.handleEditClick(x)} />
                               <Button icon="remove" color="red" onClick={() => this.handleRemoveClick(x)} />

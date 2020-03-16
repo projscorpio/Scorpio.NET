@@ -19,7 +19,9 @@ namespace Scorpio.Api.Validation
             {
                 if (!(Activator.CreateInstance(validator) is ISensorDataValidator concreteValidator)) continue;
 
-                if (string.Equals(concreteValidator.SensorKey, sensorKey, StringComparison.InvariantCultureIgnoreCase))
+                // By starts with we can re-use same validator, i.e.
+                // If validator is for 'gps' key, and the entity has 'gps' or 'gps-markers' both will be matched
+                if (sensorKey.StartsWith(concreteValidator.SensorKey, StringComparison.InvariantCultureIgnoreCase))
                     ret.Add(concreteValidator);
             }
 

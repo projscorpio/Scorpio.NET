@@ -8,7 +8,7 @@ import NotFound from "./components/common/notFound";
 import NavBar from "./components/navbar/navbar";
 import Alert from "react-s-alert";
 import { genericApi } from "./api/genericApi";
-import { API } from "./constants/appConstants";
+import { API, TOPICS } from "./constants/appConstants";
 import AlertDispatcher from "./services/AlertDispatcher";
 import DashboardScreen from "./components/screens/dashboard/dashboardScreen";
 import StreamScreen from "./components/screens/stream/streamScreen";
@@ -27,6 +27,7 @@ import Control from "./components/screens/control/control";
 import CanOpenExplorer from "./components/screens/canOpenExplorer/canOpenExplorer";
 import scorpioCanOpenExplorer from "./components/screens/canOpenExplorer/scorpioCanOpenExplorer";
 import MapScreen from "./components/screens/map/mapScreen";
+import LogService from "./services/LogService";
 
 class MainComponent extends Component {
   async componentDidMount() {
@@ -46,7 +47,33 @@ class MainComponent extends Component {
     this.props.actions.setSensors(sensorRes.body);
     const streamRes = await genericApi(API.STREAMS.GET_ALL, "GET");
     this.props.actions.setStreams(streamRes.body);
+    const gpsMarkersRes = await genericApi(API.SENSOR_DATA.GET_ALL_FILTERED.format("gps-markers"), "GET");
+    this.props.actions.setMapMarkers(gpsMarkersRes.body);
+
+    MessagingService.subscribe(TOPICS.ROVER_GPS_POS, this.roverPosChangedHandler);
+    MessagingService.subscribe(TOPICS.ROVER_COMPASS_ANGLE, this.roverAngleChangedHandler);
   }
+
+  componentWillUnmount() {
+    MessagingService.unsubscribe(TOPICS.ROVER_GPS_POS, this.roverPosChangedHandler);
+    MessagingService.unsubscribe(TOPICS.ROVER_COMPASS_ANGLE, this.roverAngleChangedHandler);
+  }
+
+  roverPosChangedHandler = data => {
+    try {
+      const roverPos = JSON.parse(data);
+      LogService.info("Got new rover position", roverPos);
+      this.props.actions.setRoverPosition(roverPos);
+    } catch {}
+  };
+
+  roverAngleChangedHandler = data => {
+    try {
+      const roverAngle = JSON.parse(data);
+      LogService.info("Got new rover angle", roverAngle);
+      if (roverAngle.angle) this.props.actions.setRoverAngle(roverAngle.angle);
+    } catch {}
+  };
 
   async initMessagingAsync() {
     window.scorpioMessaging = MessagingService;

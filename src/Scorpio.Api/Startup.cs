@@ -108,6 +108,7 @@ namespace Scorpio.Api
                 .AddTransient<SaveSensorDataEventHandler>()
                 .AddTransient<SaveManySensorDataEventHandler>()
                 .AddTransient<UbiquitiDataReceivedEventHandler>()
+                .AddTransient<GpsDataReceivedEventHandler>()
                 .AddTransient<IUiConfigurationRepository, UiConfigurationRepository>()
                 .AddTransient<ISensorRepository, SensorRepository>()
                 .AddTransient<ISensorDataRepository, SensorDataRepository>()

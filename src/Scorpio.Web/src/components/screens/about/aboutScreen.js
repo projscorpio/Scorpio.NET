@@ -46,14 +46,6 @@ class AboutScreen extends Component {
                     </Header>
                   </Link>
                 </Grid.Column>
-                <Grid.Column>
-                  <Link to="/map">
-                    <Header icon>
-                      <Icon name="map" />
-                      Map
-                    </Header>
-                  </Link>
-                </Grid.Column>
               </Grid.Row>
             </Grid>
           </Container>
