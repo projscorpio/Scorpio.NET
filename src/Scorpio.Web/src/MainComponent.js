@@ -71,7 +71,7 @@ class MainComponent extends Component {
     try {
       const roverAngle = JSON.parse(data);
       LogService.info("Got new rover angle", roverAngle);
-      if (roverAngle.angle) this.props.actions.setRoverAngle(roverAngle.angle);
+      this.props.actions.setRoverAngle(roverAngle);
     } catch {}
   };
 
