@@ -7,32 +7,23 @@ namespace Scorpio.Messaging.Abstractions
     public class GenericEventBusSubscriptionManager : IEventBusSubscriptionManager
     {
         private readonly Dictionary<string, List<SubscriptionInfo>> _handlers;
-        private readonly List<Type> _eventTypes;
-
-        public event EventHandler<string> OnEventRemoved;
 
         public GenericEventBusSubscriptionManager()
         {
             _handlers = new Dictionary<string, List<SubscriptionInfo>>();
-            _eventTypes = new List<Type>();
         }
 
         public bool IsEmpty => !_handlers.Keys.Any();
         public void Clear() => _handlers.Clear();
 
-        public void AddSubscription<T, TH>() where T : IIntegrationEvent where TH : IIntegrationEventHandler<T>
+        public void AddSubscription<T, TH>(string key = null) where T : IIntegrationEvent where TH : IIntegrationEventHandler<T>
         {
-            var eventName = GetEventKey<T>();
+            var eventName = string.IsNullOrWhiteSpace(key) ? GetEventKey<T>() : key;
 
-            DoAddSubscription(typeof(TH), eventName);
-
-            if (!_eventTypes.Contains(typeof(T)))
-            {
-                _eventTypes.Add(typeof(T));
-            }
+            DoAddSubscription(typeof(TH), typeof(T), eventName);
         }
 
-        private void DoAddSubscription(Type handlerType, string eventName)
+        private void DoAddSubscription(Type handlerType, Type eventType, string eventName)
         {
             if (!HasSubscriptionsForEvent(eventName))
             {
@@ -45,7 +36,7 @@ namespace Scorpio.Messaging.Abstractions
                     $"Handler Type {handlerType.Name} already registered for '{eventName}'", nameof(handlerType));
             }
 
-            _handlers[eventName].Add(SubscriptionInfo.Typed(handlerType));
+            _handlers[eventName].Add(new SubscriptionInfo(eventType, handlerType));
         }
 
         public void RemoveSubscription<TEvent, THandler>() where THandler : IIntegrationEventHandler<TEvent> where TEvent : IIntegrationEvent
@@ -62,13 +53,6 @@ namespace Scorpio.Messaging.Abstractions
 
             if (_handlers[eventName].Any()) return;
             _handlers.Remove(eventName);
-            var eventType = _eventTypes.SingleOrDefault(e => e.Name == eventName);
-            if (eventType != null)
-            {
-                _eventTypes.Remove(eventType);
-            }
-
-            OnEventRemoved?.Invoke(this, eventName);
         }
 
         public IEnumerable<SubscriptionInfo> GetHandlersForEvent<TEvent>() where TEvent : IIntegrationEvent
@@ -104,7 +88,7 @@ namespace Scorpio.Messaging.Abstractions
 
         public bool HasSubscriptionsForEvent(string eventName) => _handlers.ContainsKey(eventName);
 
-        public Type GetEventTypeByName(string eventName) => _eventTypes.SingleOrDefault(t => t.Name == eventName);
+        public Type GetEventTypeByName(string eventName) => _handlers[eventName].FirstOrDefault()?.EventType;
 
         public string GetEventKey<T>()
         {

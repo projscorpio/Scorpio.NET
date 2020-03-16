@@ -4,23 +4,13 @@ namespace Scorpio.Messaging.Abstractions
 {
     public class SubscriptionInfo
     {
-        public bool IsDynamic { get; }
+        public Type EventType { get; }
         public Type HandlerType { get; }
 
-        private SubscriptionInfo(bool isDynamic, Type handlerType)
+        public SubscriptionInfo(Type eventType, Type handlerType)
         {
-            IsDynamic = isDynamic;
+            EventType = eventType;
             HandlerType = handlerType;
-        }
-
-        public static SubscriptionInfo Dynamic(Type handlerType)
-        {
-            return new SubscriptionInfo(true, handlerType);
-        }
-
-        public static SubscriptionInfo Typed(Type handlerType)
-        {
-            return new SubscriptionInfo(false, handlerType);
         }
     }
 }

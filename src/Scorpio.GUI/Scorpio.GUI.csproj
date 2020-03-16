@@ -245,10 +245,6 @@
       <Project>{4b602fe1-5eed-41ad-b218-e8ef7b998b77}</Project>
       <Name>Scorpio.Messaging.Messages</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Scorpio.Messaging.RabbitMQ\Scorpio.Messaging.RabbitMQ.csproj">
-      <Project>{5635a59a-68ee-46c8-8df7-3ae1355b441c}</Project>
-      <Name>Scorpio.Messaging.RabbitMQ</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Scorpio.Messaging.Sockets\Scorpio.Messaging.Sockets.csproj">
       <Project>{0ffb8f77-5639-4a00-b855-a589de7d9dee}</Project>
       <Name>Scorpio.Messaging.Sockets</Name>

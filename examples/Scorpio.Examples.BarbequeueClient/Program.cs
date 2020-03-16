@@ -23,14 +23,18 @@ namespace Scorpio.Examples.BarbequeueClient
         {
             BuildContainer();
             var eventBus = _container.Resolve<IEventBus>();
-            eventBus.Subscribe<RoverControlCommand, RoverControlCommandHandler>();
+            //eventBus.Subscribe<RoverControlCommand, RoverControlCommandHandler>();
+
+            var socketClient = _container.Resolve<ISocketClient>();
+            socketClient.TryConnect();
 
             while (true)
             {
-                var msg = new RoverControlCommand(-14423.1f, 313.11312f);
+                //var msg = new RoverControlCommand(-14423.1f, 313.11312f);
+                var msg = new GpsDataReceivedEvent {Latitude = 51, Longitude = 16.4};
                 Logger.LogInformation("Publishing...");
                 eventBus.Publish(msg);
-                Thread.Sleep(500);
+                Thread.Sleep(4000);
             }
         }
 
@@ -39,8 +43,9 @@ namespace Scorpio.Examples.BarbequeueClient
             var socketConf = new SocketConfiguration
             {
                 //Host = "192.168.43.166",
-                Host = "127.0.0.1",
-                Port = 5000
+                Host = "80.68.231.116",
+                //Host = "127.0.0.1",
+                Port = 2138
             };
 
             var loggerConfig = new LoggerConfiguration()

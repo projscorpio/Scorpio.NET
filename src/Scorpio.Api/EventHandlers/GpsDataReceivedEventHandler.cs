@@ -29,6 +29,8 @@ namespace Scorpio.Api.EventHandlers
 
         public async Task Handle(GpsDataReceivedEvent @event)
         {
+            _logger.LogDebug("Received GPS data from broker...");
+
             var sensorDataEntity = new SensorData
             {
                 SensorKey = "gps",

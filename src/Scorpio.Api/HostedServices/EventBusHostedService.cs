@@ -4,11 +4,10 @@ using Scorpio.Api.EventHandlers;
 using Scorpio.Api.Events;
 using Scorpio.Messaging.Abstractions;
 using Scorpio.Messaging.Messages;
-using Scorpio.Messaging.RabbitMQ;
+using Scorpio.Messaging.Sockets;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Scorpio.Messaging.Sockets;
 
 namespace Scorpio.Api.HostedServices
 {
@@ -25,11 +24,6 @@ namespace Scorpio.Api.HostedServices
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            // RabbitMQ connection requires connecting - this can be refactored later
-            var rabbitMqConnection = _autofac.ResolveOptional<IRabbitMqConnection>();
-            if (rabbitMqConnection != null) // rabbit is enabled
-                rabbitMqConnection.TryConnect();
-
             try
             {
                 _eventBus = _autofac.Resolve<IEventBus>();
