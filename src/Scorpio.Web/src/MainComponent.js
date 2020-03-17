@@ -49,6 +49,9 @@ class MainComponent extends Component {
     const gpsMarkersRes = await genericApi(API.SENSOR_DATA.GET_ALL_FILTERED.format("gps-markers"), "GET");
     this.props.actions.setMapMarkers(gpsMarkersRes.body);
 
+    await this.setInitialRoverPosition();
+    await this.setInitialRoverAngle();
+
     MessagingService.subscribe(TOPICS.ROVER_GPS_POS, this.roverPosChangedHandler);
     MessagingService.subscribe(TOPICS.ROVER_COMPASS_ANGLE, this.roverAngleChangedHandler);
   }
@@ -57,6 +60,24 @@ class MainComponent extends Component {
     MessagingService.unsubscribe(TOPICS.ROVER_GPS_POS, this.roverPosChangedHandler);
     MessagingService.unsubscribe(TOPICS.ROVER_COMPASS_ANGLE, this.roverAngleChangedHandler);
   }
+
+  setInitialRoverPosition = async () => {
+    try {
+      const lastRoverPos = await genericApi(API.SENSOR_DATA.GET_LATEST.format("gps"), "GET");
+      this.props.actions.setRoverPosition(JSON.parse(lastRoverPos.body.value));
+    } catch (err) {
+      LogService.error("Cannot set initial rover position", err);
+    }
+  };
+
+  setInitialRoverAngle = async () => {
+    try {
+      const lastRoverAngle = await genericApi(API.SENSOR_DATA.GET_LATEST.format("compass"), "GET");
+      this.props.actions.setRoverAngle(JSON.parse(lastRoverAngle.body.value));
+    } catch (err) {
+      LogService.error("Cannot set initial rover angle", err);
+    }
+  };
 
   roverPosChangedHandler = data => {
     try {

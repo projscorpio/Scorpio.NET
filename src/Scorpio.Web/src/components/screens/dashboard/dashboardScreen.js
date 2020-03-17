@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as actions from "../../../actions";
 import { WidthProvider, Responsive } from "react-grid-layout";
-import { Responsive as SemanticResponsive, Icon, Dropdown, Menu, Segment, Checkbox } from "semantic-ui-react";
+import { Responsive as SemanticResponsive, Icon, Menu, Segment, Checkbox } from "semantic-ui-react";
 import WidgetErrorBoundary from "../../common/widgetErrorBoundary";
 import { tryParseLayouts, guid } from "../../../utils/utils";
 import OverlayContextMenu from "../../common/overlayContextMenu";
@@ -205,20 +205,6 @@ class DashboardScreen extends Component {
                 <Checkbox toggle fitted checked={allowRearrange} onChange={this.handleAllowRearrangeChanged} label="Modify" />
               </Menu.Item>
             </Menu.Menu>
-          </SemanticResponsive>
-          <SemanticResponsive style={{ marginLeft: "auto" }} maxWidth={SemanticResponsive.onlyMobile.maxWidth}>
-            <Dropdown item icon="wrench" simple>
-              <>
-                Layout settings
-                <Dropdown.Menu>
-                  <Dropdown.Item>
-                    <Checkbox toggle checked={allowRearrange} onChange={this.handleAllowRearrangeChanged} label="Modify" />
-                  </Dropdown.Item>
-                  <Dropdown.Item onClick={this.resetLayout}>Reset layout</Dropdown.Item>
-                  <Dropdown.Item onClick={this.removeConfigPage}>Remove config</Dropdown.Item>
-                </Dropdown.Menu>
-              </>
-            </Dropdown>
           </SemanticResponsive>
         </Menu>
         <Segment>

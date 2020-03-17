@@ -38,7 +38,7 @@ const StatisticWidget = ({ sensorKey }) => {
   useEffect(() => {
     MessagingService.subscribe(TOPICS.SENSOR_DATA, websocketHandler);
 
-    const endpoint = API.SENSOR_DATA.GET_LATEST_FILTERED.format(sensorKey);
+    const endpoint = API.SENSOR_DATA.GET_LATEST.format(sensorKey);
     genericApi(endpoint, "GET").then(result => {
       if (result.response && result.response.ok) {
         setIsFetching(false);

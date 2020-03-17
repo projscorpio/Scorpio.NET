@@ -142,6 +142,24 @@ class SensorDataEditorScreen extends Component {
     this.fetchItems(currentPage, itemsPerPage, selectedSensor);
   };
 
+  renderValue = entity => {
+    try {
+      if (entity.sensorKey.startsWith("gps")) return this.renderGpsValue(entity.value);
+      else return entity.value;
+    } catch {
+      return "Invalid value for given sensor type";
+    }
+  };
+
+  renderGpsValue = value => {
+    const pos = JSON.parse(value);
+    return (
+      <span>
+        Lat: {pos.latitude} Lon: {pos.longitude}
+      </span>
+    );
+  };
+
   render() {
     const { isFetched, entities, runWizard, runWipeWizard, itemsPerPage, currentPage, editingEntity, selectedSensor, showId } = this.state;
     const hasData = Array.isArray(entities) && entities.length > 0;
@@ -187,7 +205,7 @@ class SensorDataEditorScreen extends Component {
                             {renderIdCol && <TableCell>{x.id}</TableCell>}
                             {renderSensorKeyCol && <TableCell>{x.sensorKey}</TableCell>}
                             <TableCell>{x.timeStamp ? new Date(x.timeStamp).toLocaleString() : ""}</TableCell>
-                            <TableCell>{x.value}</TableCell>
+                            <TableCell>{this.renderValue(x)}</TableCell>
                             <TableCell>{x.comment}</TableCell>
                             <TableCell>
                               <Button icon="edit" color="grey" onClick={() => this.handleEditClick(x)} />

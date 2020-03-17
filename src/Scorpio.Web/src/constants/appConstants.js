@@ -26,7 +26,7 @@ export const API = {
     GET_ALL_FILTERED: baseUrl + "/api/sensorData/sensorKey/{0}",
     GET_PAGED: baseUrl + "/api/sensorData/paged?pageNumber={0}&itemsPerPage={1}",
     GET_PAGED_FILTERED: baseUrl + "/api/sensorData/sensorKey/{0}/paged?pageNumber={1}&itemsPerPage={2}",
-    GET_LATEST_FILTERED: baseUrl + "/api/sensorData/sensorKey/{0}/latest",
+    GET_LATEST: baseUrl + "/api/sensorData/sensorKey/{0}/latest",
     UPDATE: baseUrl + "/api/sensorData/{0}",
     ADD: baseUrl + "/api/sensorData",
     DELETE: baseUrl + "/api/sensorData/{0}",
