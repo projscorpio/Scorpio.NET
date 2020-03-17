@@ -27,6 +27,7 @@ import CanOpenExplorer from "./components/screens/canOpenExplorer/canOpenExplore
 import scorpioCanOpenExplorer from "./components/screens/canOpenExplorer/scorpioCanOpenExplorer";
 import MapScreen from "./components/screens/map/mapScreen";
 import LogService from "./services/LogService";
+import RoverRenderer from "./components/screens/roverRenderer/roverRenderer";
 
 class MainComponent extends Component {
   async componentDidMount() {
@@ -117,6 +118,7 @@ class MainComponent extends Component {
             <Route exact path="/map" component={MapScreen} />
             <Route exact path="/control" component={Control} />
             <Route exact path="/about" component={AboutScreen} />
+            <Route exact path="/rover-renderer" component={RoverRenderer} />
             <Route exact path="/edit/sensor" component={SensorsEditorScreen} />
             <Route exact path="/edit/stream" component={StreamEditorScreen} />
             <Route exact path="/science/edit/sensor-data/:sensorKey?/:id?" component={SensorDataEditorScreen} />
