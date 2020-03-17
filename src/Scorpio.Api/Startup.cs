@@ -229,20 +229,16 @@ namespace Scorpio.Api
 
         public static IServiceCollection AddHealthChecks(this IServiceCollection services, IConfiguration config)
         {
-            var user = config["RabbitMq:userName"];
-            var password = config["RabbitMq:password"];
-            var host = config["RabbitMq:host"];
-            var port = config["RabbitMq:port"];
-            var virtualHost = config["RabbitMq:virtualHost"];
+            var brokerHost = config["socketClient:host"];
+            var brokerPort = int.Parse(config["socketClient:port"]);
 
-            var rabbitMqConnectionString = $"amqp://{user}:{password}@{host}:{port}{virtualHost}";
             var mongoDbConnectionString = config.GetValue<string>("MongoDb:ConnectionString");
 
             var timeout = TimeSpan.FromSeconds(1.5);
 
             services.AddHealthChecks()
-                //.AddRabbitMQ(rabbitMqConnectionString, sslOption: null, name: "RabbitMQ", timeout: timeout)
-                .AddMongoDb(mongoDbConnectionString, timeout: timeout, name: "MongoDb");
+                .AddMongoDb(mongoDbConnectionString, name: "MongoDb", timeout: timeout )
+                .AddTcpHealthCheck(options => { options.AddHost(brokerHost, brokerPort); }, "ScorpioBroker", timeout: timeout);
 
             return services;
         }

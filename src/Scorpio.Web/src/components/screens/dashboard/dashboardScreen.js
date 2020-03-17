@@ -265,7 +265,7 @@ class DashboardScreen extends Component {
 }
 
 function mapStateToProps(state) {
-  return { state };
+  return { state }; // TODO
 }
 
 function mapDispatchToProps(dispatch) {

@@ -19,7 +19,6 @@ import StreamEditorScreen from "./components/screens/stream-editor/streamEditorS
 import ConsoleScreen from "./components/screens/console/consoleScreen";
 import SensorDataEditorScreen from "./components/screens/sensorData-editor/sensorDataEditorScreen";
 import ScienceChartsScreen from "./components/screens/scienceCharts/scienceChartsScreen";
-import StatusOverlay from "./components/common/statusOverlay";
 import GamepadService from "./services/GamepadService";
 import MessagingService from "./services/MessagingService";
 import FiluRacer from "./components/common/filuRacer";
@@ -109,7 +108,6 @@ class MainComponent extends Component {
             <Redirect to="/not-found" />
           </Switch>
         </NavBar>
-        <StatusOverlay />
         <Alert stack={{ limit: 2 }} beep timeout={5000} />
       </>
     );

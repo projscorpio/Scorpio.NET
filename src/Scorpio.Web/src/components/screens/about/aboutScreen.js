@@ -3,6 +3,7 @@ import { Grid, Header, Image, Segment, Container, Icon } from "semantic-ui-react
 import { genericApi } from "../../../api/genericApi";
 import { API } from "../../../constants/appConstants";
 import { Link } from "react-router-dom";
+import AppHealth from "../../common/appHealth";
 
 class AboutScreen extends Component {
   constructor(props) {
@@ -25,6 +26,39 @@ class AboutScreen extends Component {
 
     return (
       <>
+        <Segment textAlign="center">
+          <Header>App health</Header>
+          <Container fluid>
+            <AppHealth />
+          </Container>
+        </Segment>
+
+        <Segment>
+          <Grid textAlign="center" style={{ height: "100%", maxWidth: "500px", margin: "auto" }} verticalAlign="middle">
+            <Grid.Row textAlign="center">
+              <Header as="h3">SPA info:</Header>
+            </Grid.Row>
+            <Grid.Row className="padding-top-0 margin-top-0">
+              <pre style={{ backgroundColor: "lightgray" }}>
+                Built env: {mode}
+                <br /> API endpoint: {API.ROOT}
+              </pre>
+            </Grid.Row>
+            <Grid.Row className="padding-top-0 margin-top-0">
+              <Header as="h3">Api info:</Header>
+            </Grid.Row>
+            <Grid.Row>
+              <a href={API.SWAGGER} rel="noopener noreferrer" target="_blank">
+                <Image size="small" src={publicUrl + "/swagger.png"} />
+              </a>
+              <pre style={{ backgroundColor: "lightgray" }}>{apiInfo}</pre>
+            </Grid.Row>
+            <Grid.Row>
+              <Header as="h3">Created by: Mateusz Kryszczak</Header>
+            </Grid.Row>
+          </Grid>
+        </Segment>
+
         <Segment>
           <Header>Experimental / Obsolete / Descoped features</Header>
           <Container fluid>
@@ -46,34 +80,18 @@ class AboutScreen extends Component {
                     </Header>
                   </Link>
                 </Grid.Column>
+                <Grid.Column>
+                  <Link to="/filu">
+                    <Header icon>
+                      <Icon name="wheelchair" />
+                      Filu Racer
+                    </Header>
+                  </Link>
+                </Grid.Column>
               </Grid.Row>
             </Grid>
           </Container>
         </Segment>
-        <div style={{ marginTop: "80px" }}>
-          <Grid textAlign="center" style={{ height: "100%", maxWidth: "500px", margin: "auto" }} verticalAlign="middle">
-            <Grid.Row>
-              <Header as="h1">
-                <div> Built env: {mode}</div> <div>API endpoint: {API.ROOT}</div>
-              </Header>
-            </Grid.Row>
-            <Grid.Row>
-              <Header as="h1">Scorpio rover control App</Header>
-            </Grid.Row>
-            <Grid.Row>
-              <Header>Created by: Mateusz Kryszczak</Header>
-            </Grid.Row>
-            <Grid.Row>
-              <a href={API.SWAGGER} rel="noopener noreferrer" target="_blank">
-                <Image size="medium" src={publicUrl + "/swagger.png"} />
-              </a>
-            </Grid.Row>
-            <Grid.Row>
-              <div>Api info:</div>
-              <pre style={{ backgroundColor: "lightgray" }}>{apiInfo}</pre>
-            </Grid.Row>
-          </Grid>
-        </div>
       </>
     );
   }

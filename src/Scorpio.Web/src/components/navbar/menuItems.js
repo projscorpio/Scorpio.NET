@@ -45,6 +45,10 @@ const MenuItems = ({ onClick }) => {
           </Dropdown.Menu>
         </Dropdown>
       </Menu.Item>
+      <Menu.Item name="/about" as="a" position="right" onClick={onClick}>
+        <Icon name="info circle" />
+        About
+      </Menu.Item>
     </>
   );
 };

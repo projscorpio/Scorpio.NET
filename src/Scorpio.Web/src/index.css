@@ -35,6 +35,10 @@ html {
   border: 1px solid lightgray;
 }
 
+.d-block {
+  display: block !important;
+}
+
 .inline {
   display: inline-block !important;
 }

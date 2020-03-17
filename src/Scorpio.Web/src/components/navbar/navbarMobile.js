@@ -13,7 +13,7 @@ const NavBarMobile = ({ history, children, onPusherClick, onToggle, visible }) =
       <Sidebar as={Menu} animation="overlay" icon="labeled" inverted width="wide" vertical visible={visible}>
         <MenuItems onClick={handleClick} />
       </Sidebar>
-      <Sidebar.Pusher dimmed={visible} onClick={onPusherClick} style={{ minHeight: "100vh", height: "100%" }}>
+      <Sidebar.Pusher dimmed={visible} onClick={onPusherClick} style={{ minHeight: "100vh" }}>
         <Menu fixed="top">
           <Menu.Item>
             <Image size="tiny" src={process.env.PUBLIC_URL + "/logo.png"} />
