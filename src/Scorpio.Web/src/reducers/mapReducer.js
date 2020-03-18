@@ -9,6 +9,12 @@ export default function mapReducer(state = initialState.map, action) {
     case types.ADD_MAP_MARKER:
       return doSetMapMarker(state, action);
 
+    case types.UPDATE_MAP_MARKER:
+      return doUpdateMapMarker(state, action);
+
+    case types.REMOVE_MAP_MARKER:
+      return { ...state, markers: state.markers.filter(m => m.id !== action.payload) };
+
     case types.SET_ROVER_POSITION:
       return { ...state, roverPosition: action.payload };
 
@@ -22,6 +28,12 @@ export default function mapReducer(state = initialState.map, action) {
 
 function doSetMarkers(state, action) {
   return { ...state, markers: extractMarkers(action.payload) };
+}
+
+function doUpdateMapMarker(state, action) {
+  const markersWithoutUpdatedOne = state.markers.filter(m => m.id !== action.payload.id);
+  markersWithoutUpdatedOne.push(action.payload);
+  return { ...state, markers: markersWithoutUpdatedOne };
 }
 
 // payload is raw http response, therefore some mapping is required

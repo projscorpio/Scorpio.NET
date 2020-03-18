@@ -1,6 +1,5 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect } from "react";
 import * as THREE from "three";
-// import "./sample.stl";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 const STLLoader = require("three-stl-loader")(THREE);
 
@@ -19,9 +18,7 @@ const RoverRenderer = () => {
     renderer.setClearColor("#ff0");
     renderer.setSize(width, height);
 
-    const renderScene = () => {
-      renderer.render(scene, camera);
-    };
+    const renderScene = () => renderer.render(scene, camera);
 
     new STLLoader().load(
       "./sample.stl",
@@ -43,30 +40,23 @@ const RoverRenderer = () => {
       renderScene();
     };
 
-    mount.current.appendChild(renderer.domElement);
-    window.addEventListener("resize", handleResize);
-
     const animate = () => {
-      // cube.rotation.x += 0.01;
-      // cube.rotation.y += 0.01;
-
       renderScene();
       window.requestAnimationFrame(animate);
     };
-    animate();
 
     new OrbitControls(camera, renderer.domElement);
-
     scene.add(new THREE.AxesHelper(500));
     scene.add(new THREE.GridHelper(2000));
+
+    mount.current.appendChild(renderer.domElement);
+    window.addEventListener("resize", handleResize);
+
+    animate();
 
     return () => {
       window.removeEventListener("resize", handleResize);
       mount.current.removeChild(renderer.domElement);
-
-      //scene.remove(cube);
-      // geometry.dispose();
-      // material.dispose();
     };
   }, []);
 

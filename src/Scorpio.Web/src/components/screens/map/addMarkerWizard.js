@@ -5,9 +5,11 @@ import GenericWizard from "../../common/genericWizard";
 import Validators from "../../../utils/formValidators";
 
 const AddMarkerWizard = ({ onClose, onSubmit, initialValues }) => {
+  const title = initialValues ? "Edit location" : "Add location";
+
   return (
-    <GenericWizard title={"Add location"} onClose={onClose} onSubmit={onSubmit} initialValues={initialValues} showSteps={false}>
-      <GenericWizard.Page title="Add Marker">
+    <GenericWizard title={title} onClose={onClose} onSubmit={onSubmit} initialValues={initialValues} showSteps={false}>
+      <GenericWizard.Page>
         <Field name="name" validate={Validators.required}>
           {({ input, meta }) => (
             <SemanticForm.Input
@@ -21,7 +23,10 @@ const AddMarkerWizard = ({ onClose, onSubmit, initialValues }) => {
           )}
         </Field>
         <SemanticForm.Group widths="equal">
-          <Field name="latitude" validate={Validators.compose(Validators.required, Validators.number)}>
+          <Field
+            name="latitude"
+            validate={Validators.compose(Validators.required, Validators.number, Validators.minNumber(-90), Validators.maxNumber(90))}
+          >
             {({ input, meta }) => (
               <SemanticForm.Input
                 {...input}
@@ -33,7 +38,10 @@ const AddMarkerWizard = ({ onClose, onSubmit, initialValues }) => {
               />
             )}
           </Field>
-          <Field name="longitude" validate={Validators.compose(Validators.required, Validators.number)}>
+          <Field
+            name="longitude"
+            validate={Validators.compose(Validators.required, Validators.number, Validators.minNumber(-180), Validators.maxNumber(180))}
+          >
             {({ input, meta }) => (
               <SemanticForm.Input
                 {...input}

@@ -1,11 +1,11 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { Marker, Tooltip } from "react-leaflet";
+import { Marker, Popup } from "react-leaflet";
 import moment from "moment";
-import { Button, Popup } from "semantic-ui-react";
+import { Button } from "semantic-ui-react";
 
-const PositionMarkers = ({ onEditClicked }) => {
-  const markers = useSelector(x => x.map).markers;
+const PositionMarkers = ({ onEditClicked, onRemoveClicked }) => {
+  const { markers } = useSelector(x => x.map);
 
   const onEditClick = (ev, marker) => {
     ev.preventDefault();
@@ -15,23 +15,18 @@ const PositionMarkers = ({ onEditClicked }) => {
   return (
     <>
       {markers.map((m, indx) => (
-        <Marker
-          position={[parseFloat(m.latitude), parseFloat(m.longitude)]}
-          key={`${m.latitude}_${m.longitude}_${indx}`}
-          onMouseOver={e => e.target.openPopup()}
-          onMouseOut={e => e.target.closePopup()}
-        >
-          <Popup>POPUP</Popup>
-          <Tooltip interactive permanent>
+        <Marker position={[parseFloat(m.latitude), parseFloat(m.longitude)]} key={`${m.latitude}_${m.longitude}_${indx}`}>
+          <Popup>
             <span style={{ fontWeight: "bold" }}>
               {m.name} {moment(m.timeStamp).format(moment.HTML5_FMT.DATETIME_LOCAL)}
             </span>
             <br /> Lat: &#91;{m.latitude}, Lon: {m.longitude}&#93;
             <br />
-            <center>
-              <Button onClick={ev => onEditClick(ev, m)}>Edit</Button>
-            </center>
-          </Tooltip>
+            <div style={{ textAlign: "center", marginTop: "0.8em" }}>
+              <Button icon="pencil" color="vk" onClick={ev => onEditClick(ev, m)} />
+              <Button icon="close" color="red" onClick={ev => onRemoveClicked(ev, m)} />
+            </div>
+          </Popup>
         </Marker>
       ))}
     </>

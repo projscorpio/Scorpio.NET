@@ -18,6 +18,7 @@ class MapWidget extends Component {
   constructor(props) {
     super(props);
     this.state = { showWizard: false, editableMarker: null };
+    this.mapRef = React.createRef();
   }
 
   onEditClicked = marker => {
@@ -45,8 +46,18 @@ class MapWidget extends Component {
     if (resp.response.ok) {
       this.setState({ showWizard: false, editableMarker: null });
       const { data } = resp.body;
-      // TODO update should have its own action, now page refresh is required to get rid of old markers
-      this.props.actions.addMapMarker({ ...payload, name: data.comment, timeStamp: data.timeStamp, id: data.id }); // save in redux
+
+      const marker = { ...payload, name: data.comment, timeStamp: data.timeStamp, id: data.id };
+      if (editableMarker) this.props.actions.updateMapMarker(marker);
+      else this.props.actions.addMapMarker(marker); // save in redux store
+    }
+  };
+
+  onRemoveClicked = async (ev, marker) => {
+    ev.preventDefault();
+    if (window.confirm("Are you sure?")) {
+      await genericApi(API.SENSOR_DATA.DELETE.format(marker.id), "DELETE");
+      this.props.actions.removeMapMarker(marker.id);
     }
   };
 
@@ -54,6 +65,7 @@ class MapWidget extends Component {
     const { showWizard, editableMarker } = this.state;
     const { roverPosition } = this.props.state.map;
 
+    console.log(this.mapRef.current);
     // TODO: follow rover switch or 'center' button to follow rover
     const center = roverPosition.latitude ? [roverPosition.latitude, roverPosition.longitude] : [51.107883, 17.038538]; //- wro
 
@@ -70,13 +82,18 @@ class MapWidget extends Component {
           style={{
             width: "100%",
             height: "100%",
-            zIndex: "0"
+            zIndex: 1
           }}
+          attributionControl={true}
+          zoomControl={true}
+          ref={this.mapRef}
+          onclick={ev => console.log(ev)}
           center={center}
           zoom={13}
+          duration={2000}
         >
           <TileLayer url="/map/map_images/{z}/{x}/{y}.png" />
-          <PositionMarkers onEditClicked={this.onEditClicked} />
+          <PositionMarkers onEditClicked={this.onEditClicked} onRemoveClicked={this.onRemoveClicked} />
           <RoverMarker rotate />
         </Map>
         <Button className="scorpio-leaflet-overlay-container" color="blue" onClick={() => this.setState({ showWizard: true })}>
