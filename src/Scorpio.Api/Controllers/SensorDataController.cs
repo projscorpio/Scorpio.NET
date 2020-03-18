@@ -29,9 +29,6 @@ namespace Scorpio.Api.Controllers
         public async Task<IActionResult> GetLatestBySensorKey(string sensorKey)
         {
             var result = await Repository.GetLatestFiltered(x => x.SensorKey == sensorKey) ?? new SensorData();
-
-            // fast hack: ensure response has body, otherwise WebAPI returns 204 no content and JS parser fails
-
             return Ok(result);
         }
 
@@ -48,6 +45,10 @@ namespace Scorpio.Api.Controllers
         public override Task<ServiceResult<SensorData>> Add(SensorData entity)
         {
             SensorDataValidatorExecutor.Execute(entity, true);
+
+            // If no date, add current one
+            if (entity.TimeStamp == new DateTime()) entity.TimeStamp = DateTime.UtcNow;
+
             return base.Add(entity);
         }
 
@@ -56,6 +57,7 @@ namespace Scorpio.Api.Controllers
         public override Task<ServiceResult<SensorData>> Update(string id, SensorData entity)
         {
             SensorDataValidatorExecutor.Execute(entity, true);
+            if (string.IsNullOrWhiteSpace(entity.Id)) entity.Id = id;
             return base.Update(id, entity);
         }
 

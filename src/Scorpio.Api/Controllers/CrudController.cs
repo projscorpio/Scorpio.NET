@@ -124,7 +124,7 @@ namespace Scorpio.Api.Controllers
             try
             {
                 response.Data = await Repository.UpdateAsync(entity);
-                response.AddSuccessMessage($"Successfully updated config: {entity}");
+                response.AddSuccessMessage($"Successfully updated entity: {entity}");
                 Ok(response);
             }
             catch (FormatException ex)

@@ -25,11 +25,14 @@ namespace Scorpio.Messaging.Sockets.Workers
         {
             if (!NetworkStream.CanRead)
                 return;
+            int length = 0;
 
             try
             {
+                Array.Clear(_data, 0, _data.Length);
+
                 // Receive header first - 4 bytes indicating total packet length
-                var length = ReceiveHeader();
+                length = ReceiveHeader();
 
                 // Receive actual packet
                 ReceivePayload(length);
@@ -40,7 +43,7 @@ namespace Scorpio.Messaging.Sockets.Workers
             }
             catch (ArgumentOutOfRangeException)
             {
-                Logger.LogWarning("Received message, length bytes error (invalid protocol)");
+                Logger.LogWarning("Received message, length bytes error (invalid protocol), len: " + length);
             }
             catch (IOException ex) when (ex.InnerException is SocketException innerEx && innerEx.SocketErrorCode == SocketError.TimedOut)
             {
@@ -67,8 +70,11 @@ namespace Scorpio.Messaging.Sockets.Workers
 
             // Convert to integer with correct endianness
             int headerLengthInt = BitConverter.ToInt32(header, 0);
-            int length = IPAddress.NetworkToHostOrder(headerLengthInt);
-            return length;
+            return headerLengthInt;
+
+            // TODO: discuss if we should use it
+            //int length = IPAddress.NetworkToHostOrder(headerLengthInt);
+            //return length;
         }
 
         private void ReceivePayload(int length)

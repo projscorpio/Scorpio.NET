@@ -8,7 +8,7 @@ import NotFound from "./components/common/notFound";
 import NavBar from "./components/navbar/navbar";
 import Alert from "react-s-alert";
 import { genericApi } from "./api/genericApi";
-import { API } from "./constants/appConstants";
+import { API, TOPICS } from "./constants/appConstants";
 import AlertDispatcher from "./services/AlertDispatcher";
 import DashboardScreen from "./components/screens/dashboard/dashboardScreen";
 import StreamScreen from "./components/screens/stream/streamScreen";
@@ -19,13 +19,15 @@ import StreamEditorScreen from "./components/screens/stream-editor/streamEditorS
 import ConsoleScreen from "./components/screens/console/consoleScreen";
 import SensorDataEditorScreen from "./components/screens/sensorData-editor/sensorDataEditorScreen";
 import ScienceChartsScreen from "./components/screens/scienceCharts/scienceChartsScreen";
-import StatusOverlay from "./components/common/statusOverlay";
 import GamepadService from "./services/GamepadService";
 import MessagingService from "./services/MessagingService";
 import FiluRacer from "./components/common/filuRacer";
 import Control from "./components/screens/control/control";
 import CanOpenExplorer from "./components/screens/canOpenExplorer/canOpenExplorer";
 import scorpioCanOpenExplorer from "./components/screens/canOpenExplorer/scorpioCanOpenExplorer";
+import MapScreen from "./components/screens/map/mapScreen";
+import LogService from "./services/LogService";
+import RoverRenderer from "./components/screens/roverRenderer/roverRenderer";
 
 class MainComponent extends Component {
   async componentDidMount() {
@@ -45,7 +47,54 @@ class MainComponent extends Component {
     this.props.actions.setSensors(sensorRes.body);
     const streamRes = await genericApi(API.STREAMS.GET_ALL, "GET");
     this.props.actions.setStreams(streamRes.body);
+    const gpsMarkersRes = await genericApi(API.SENSOR_DATA.GET_ALL_FILTERED.format("gps-markers"), "GET");
+    this.props.actions.setMapMarkers(gpsMarkersRes.body);
+
+    await this.setInitialRoverPosition();
+    await this.setInitialRoverAngle();
+
+    MessagingService.subscribe(TOPICS.ROVER_GPS_POS, this.roverPosChangedHandler);
+    MessagingService.subscribe(TOPICS.ROVER_COMPASS_ANGLE, this.roverAngleChangedHandler);
   }
+
+  componentWillUnmount() {
+    MessagingService.unsubscribe(TOPICS.ROVER_GPS_POS, this.roverPosChangedHandler);
+    MessagingService.unsubscribe(TOPICS.ROVER_COMPASS_ANGLE, this.roverAngleChangedHandler);
+  }
+
+  setInitialRoverPosition = async () => {
+    try {
+      const lastRoverPos = await genericApi(API.SENSOR_DATA.GET_LATEST.format("gps"), "GET");
+      this.props.actions.setRoverPosition(JSON.parse(lastRoverPos.body.value));
+    } catch (err) {
+      LogService.error("Cannot set initial rover position", err);
+    }
+  };
+
+  setInitialRoverAngle = async () => {
+    try {
+      const lastRoverAngle = await genericApi(API.SENSOR_DATA.GET_LATEST.format("compass"), "GET");
+      this.props.actions.setRoverAngle(JSON.parse(lastRoverAngle.body.value));
+    } catch (err) {
+      LogService.error("Cannot set initial rover angle", err);
+    }
+  };
+
+  roverPosChangedHandler = data => {
+    try {
+      const roverPos = JSON.parse(data);
+      LogService.info("Got new rover position", roverPos);
+      this.props.actions.setRoverPosition(roverPos);
+    } catch {}
+  };
+
+  roverAngleChangedHandler = data => {
+    try {
+      const roverAngle = JSON.parse(data);
+      LogService.info("Got new rover angle", roverAngle);
+      this.props.actions.setRoverAngle(roverAngle);
+    } catch {}
+  };
 
   async initMessagingAsync() {
     window.scorpioMessaging = MessagingService;
@@ -60,14 +109,16 @@ class MainComponent extends Component {
   render() {
     return (
       <>
-        <NavBar className="fullWidth">
+        <NavBar className="fullWidth fullHeight">
           <Switch>
             <Route exact path="/" render={_ => <Redirect to={"/dashboard"} />} />
             <Route exact path="/dashboard" component={DashboardScreen} />
             <Route exact path="/stream" component={StreamScreen} />
             <Route exact path="/gamepad" component={GamepadScreen} />
+            <Route exact path="/map" component={MapScreen} />
             <Route exact path="/control" component={Control} />
             <Route exact path="/about" component={AboutScreen} />
+            <Route exact path="/rover-renderer" component={RoverRenderer} />
             <Route exact path="/edit/sensor" component={SensorsEditorScreen} />
             <Route exact path="/edit/stream" component={StreamEditorScreen} />
             <Route exact path="/science/edit/sensor-data/:sensorKey?/:id?" component={SensorDataEditorScreen} />
@@ -80,7 +131,6 @@ class MainComponent extends Component {
             <Redirect to="/not-found" />
           </Switch>
         </NavBar>
-        <StatusOverlay />
         <Alert stack={{ limit: 2 }} beep timeout={5000} />
       </>
     );

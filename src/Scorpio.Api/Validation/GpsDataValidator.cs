@@ -1,6 +1,7 @@
 ﻿using Matty.Framework.Validation;
 using Newtonsoft.Json;
 using Scorpio.Api.Models;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Scorpio.Api.Validation
@@ -25,19 +26,19 @@ namespace Scorpio.Api.Validation
                 throw new ValidationException(ex.Message);
             }
         }
+    }
 
-        /// <summary>
-        /// Model class
-        /// </summary>
-        private class GpsData : ValidatableParamBase<GpsData>
-        {
-            [Required(ErrorMessage = "Field 'lat' is required")]
-            [JsonProperty("lat")]
-            public float? Latitude { get; set; }
+    /// <summary>
+    /// Model class
+    /// </summary>
+    public class GpsData : ValidatableParamBase<GpsData>
+    {
+        [Required(ErrorMessage = "Field 'latitude' is required")]
+        [JsonProperty("latitude")]
+        public double? Latitude { get; set; }
 
-            [Required(ErrorMessage = "Field 'lon' is required")]
-            [JsonProperty("lon")]
-            public float? Longitude { get; set; }
-        }
+        [Required(ErrorMessage = "Field 'longitude' is required")]
+        [JsonProperty("longitude")]
+        public double? Longitude { get; set; }
     }
 }

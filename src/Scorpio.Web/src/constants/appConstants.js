@@ -26,7 +26,7 @@ export const API = {
     GET_ALL_FILTERED: baseUrl + "/api/sensorData/sensorKey/{0}",
     GET_PAGED: baseUrl + "/api/sensorData/paged?pageNumber={0}&itemsPerPage={1}",
     GET_PAGED_FILTERED: baseUrl + "/api/sensorData/sensorKey/{0}/paged?pageNumber={1}&itemsPerPage={2}",
-    GET_LATEST_FILTERED: baseUrl + "/api/sensorData/sensorKey/{0}/latest",
+    GET_LATEST: baseUrl + "/api/sensorData/sensorKey/{0}/latest",
     UPDATE: baseUrl + "/api/sensorData/{0}",
     ADD: baseUrl + "/api/sensorData",
     DELETE: baseUrl + "/api/sensorData/{0}",
@@ -57,6 +57,8 @@ export const TOPICS = {
   BATTERY_DATA: "battery",
   UBIQUITI_DATA: "ubiquiti",
   ROVER_CONTROL: "RoverControlCommand",
+  ROVER_GPS_POS: "gps",
+  ROVER_COMPASS_ANGLE: "compass",
   ROVER_ARM: "ArmRover",
   ROVER_DISARM: "DisarmRover"
 };

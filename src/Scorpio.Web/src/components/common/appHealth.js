@@ -14,23 +14,37 @@ const SignleState = ({ resource, isOk }) => {
 };
 
 const AppHealth = () => {
-  const [isSignalrOk, setSignalrOk] = useState(false);
+  const [isSignalrOk, setSignalrOk] = useState(MessagingService.isConnected());
   const [apiStatuses, setApiStatuses] = useState([]);
 
-  useEffect(() => {
-    const pollApiStatuses = async () => (await genericApi(API.HEALTH, "GET")).body;
-    const updateApiStatuses = async () => {
-      if (MessagingService._connection && MessagingService._connection.connectionState === "Connected") {
-        setSignalrOk(MessagingService._connection.connectionState === "Connected");
-      }
+  const signalRStateChanged = state => {
+    console.log(state);
+    setSignalrOk(state === "Connected");
+  };
 
-      const response = await pollApiStatuses();
-      if (response && response.results) {
-        const dupa = Object.keys(response.results).map(key => {
-          const val = response.results[key];
-          return { resource: key, isOk: val.isHealthy };
-        });
-        setApiStatuses(dupa);
+  useEffect(() => {
+    const pollApiStatuses = async () => await genericApi(API.HEALTH, "GET");
+    const updateApiStatuses = async () => {
+      MessagingService.subscribeConnectionChange(signalRStateChanged);
+
+      try {
+        const response = await pollApiStatuses();
+        if (response && response.body && response.body.results) {
+          const statuses = Object.keys(response.body.results).map(key => {
+            const val = response.body.results[key];
+            return { resource: key, isOk: val.isHealthy };
+          });
+          setApiStatuses(statuses);
+        }
+      } catch (err) {
+        setApiStatuses(statuses =>
+          statuses.map(x => {
+            return {
+              ...x,
+              isOk: false
+            };
+          })
+        );
       }
     };
 
@@ -41,6 +55,7 @@ const AppHealth = () => {
     // When unmount
     return () => {
       clearInterval(pollerTask);
+      MessagingService.unSubscribeConnectionChange(signalRStateChanged);
     };
   }, []);
 

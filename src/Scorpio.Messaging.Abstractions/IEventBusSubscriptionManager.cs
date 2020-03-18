@@ -5,7 +5,7 @@ namespace Scorpio.Messaging.Abstractions
 {
     public interface IEventBusSubscriptionManager
     {
-        void AddSubscription<TEvent, THandler>() where TEvent : IIntegrationEvent where THandler : IIntegrationEventHandler<TEvent>;
+        void AddSubscription<TEvent, THandler>(string key) where TEvent : IIntegrationEvent where THandler : IIntegrationEventHandler<TEvent>;
         void RemoveSubscription<TEvent, THandler>() where THandler : IIntegrationEventHandler<TEvent> where TEvent : IIntegrationEvent;
         bool HasSubscriptionsForEvent<TEvent>() where TEvent : IIntegrationEvent;
         bool HasSubscriptionsForEvent(string eventName);

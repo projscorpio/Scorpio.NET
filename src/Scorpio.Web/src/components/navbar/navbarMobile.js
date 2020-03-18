@@ -18,7 +18,7 @@ const NavBarMobile = ({ history, children, onPusherClick, onToggle, visible }) =
           <Menu.Item>
             <Image size="tiny" src={process.env.PUBLIC_URL + "/logo.png"} />
           </Menu.Item>
-          <Menu.Item onClick={onToggle}>
+          <Menu.Item onClick={onToggle} position="right">
             <Icon name="sidebar" />
           </Menu.Item>
         </Menu>

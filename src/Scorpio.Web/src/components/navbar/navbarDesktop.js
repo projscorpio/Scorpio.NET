@@ -1,6 +1,6 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
-import { Image, Menu, Icon } from "semantic-ui-react";
+import { Image, Menu } from "semantic-ui-react";
 import MenuItems from "./menuItems";
 
 const NavBarDesktop = ({ history }) => {
@@ -14,10 +14,6 @@ const NavBarDesktop = ({ history }) => {
         <Image className="pointer" size="tiny" src={process.env.PUBLIC_URL + "/logo.png"} onClick={_ => handleClick(_, { name: "/" })} />
       </Menu.Item>
       <MenuItems onClick={handleClick} />
-      <Menu.Item name="/about" as="a" position="right" onClick={handleClick}>
-        <Icon name="info circle" />
-        About
-      </Menu.Item>
     </Menu>
   );
 };

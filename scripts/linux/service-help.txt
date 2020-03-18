@@ -1,0 +1,3 @@
+sudo cp scorpio-api.service /etc/systemd/system/scorpio-api.service
+sudo systemctl daemon-reload
+sudo systemctl restart scorpio-api.service

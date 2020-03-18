@@ -14,6 +14,7 @@ html {
 
 #root {
   height: 100%;
+  width: 100%;
 }
 
 .fullWidth {
@@ -24,8 +25,18 @@ html {
   height: 100%;
 }
 
+#root > div:first-child {
+  /* wybacz TODO write more specified selector*/
+  height: 100%;
+  width: 100%;
+}
+
 .bordered {
   border: 1px solid lightgray;
+}
+
+.d-block {
+  display: block !important;
 }
 
 .inline {

@@ -4,11 +4,10 @@ using Scorpio.Api.EventHandlers;
 using Scorpio.Api.Events;
 using Scorpio.Messaging.Abstractions;
 using Scorpio.Messaging.Messages;
-using Scorpio.Messaging.RabbitMQ;
+using Scorpio.Messaging.Sockets;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Scorpio.Messaging.Sockets;
 
 namespace Scorpio.Api.HostedServices
 {
@@ -25,19 +24,18 @@ namespace Scorpio.Api.HostedServices
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            // RabbitMQ connection requires connecting - this can be refactored later
-            var rabbitMqConnection = _autofac.ResolveOptional<IRabbitMqConnection>();
-            rabbitMqConnection?.TryConnect();
-
             try
             {
-                _socketClient = _autofac.Resolve<ISocketClient>();
-                _socketClient.TryConnect(cancellationToken);
                 _eventBus = _autofac.Resolve<IEventBus>();
 
                 _eventBus.Subscribe<SaveSensorDataEvent, SaveSensorDataEventHandler>();
                 _eventBus.Subscribe<SaveManySensorDataEvent, SaveManySensorDataEventHandler>();
                 _eventBus.Subscribe<UbiquitiDataReceivedEvent, UbiquitiDataReceivedEventHandler>();
+                _eventBus.Subscribe<GpsDataReceivedEvent, GpsDataReceivedEventHandler>("gps");
+                _eventBus.Subscribe<CompassDataReceivedEvent, CompassDataReceivedEventHandler>("compass");
+
+                _socketClient = _autofac.Resolve<ISocketClient>();
+                _socketClient.TryConnect(cancellationToken);
             }
             catch (OperationCanceledException) { }
 

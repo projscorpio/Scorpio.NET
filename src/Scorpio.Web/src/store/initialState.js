@@ -5,5 +5,10 @@ export default {
   canOpen: {
     miControlCanTree: [],
     scorpioCanTree: []
+  },
+  map: {
+    markers: [],
+    roverRotation: 0,
+    roverPosition: { latitude: null, longitude: null }
   }
 };

@@ -80,7 +80,7 @@ namespace Scorpio.Messaging.RabbitMQ
             where TEvent : IIntegrationEvent
             where THandler : IIntegrationEventHandler<TEvent>
         {
-            var eventName = _subsManager.GetEventKey<TEvent>();
+            var eventName = string.IsNullOrWhiteSpace(keyOverride) ? _subsManager.GetEventKey<TEvent>() : keyOverride;
 
             if (!_subsManager.HasSubscriptionsForEvent(eventName))
             {
@@ -94,7 +94,7 @@ namespace Scorpio.Messaging.RabbitMQ
                 var log = $"RabbitMQ bound routingKey: {eventName} to queue: {_queueName} using exchange {_exchangeName}";
                 _logger.LogInformation(log);
             }
-            _subsManager.AddSubscription<TEvent, THandler>();
+            _subsManager.AddSubscription<TEvent, THandler>(eventName);
         }
 
         public void Unsubscribe<TEvent, THandler>(string keyOverride = null)

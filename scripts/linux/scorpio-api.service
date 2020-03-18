@@ -1,0 +1,10 @@
+[Unit]
+Description=Scorpio Web API service
+
+[Service]
+Type=simple
+WorkingDirectory=/home/jetson/Scorpio.NET/src/Scorpio.Api/bin/build
+ExecStart=/home/jetson/Scorpio.NET/src/Scorpio.Api/bin/build/Scorpio.Api
+
+[Install]
+WantedBy=multi-user.target

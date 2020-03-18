@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.MongoDb" Version="3.0.1" />
+    <PackageReference Include="AspNetCore.HealthChecks.Network" Version="3.0.1" />
     <PackageReference Include="AspNetCore.HealthChecks.Rabbitmq" Version="3.0.4" />
     <PackageReference Include="Autofac" Version="4.9.4" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="5.0.1" />
@@ -46,7 +47,6 @@
     <ProjectReference Include="..\Scorpio.Instrumentation.Ubiquiti\Scorpio.Instrumentation.Ubiquiti.csproj" />
     <ProjectReference Include="..\Scorpio.Messaging.Abstractions\Scorpio.Messaging.Abstractions.csproj" />
     <ProjectReference Include="..\Scorpio.Messaging.Messages\Scorpio.Messaging.Messages.csproj" />
-    <ProjectReference Include="..\Scorpio.Messaging.RabbitMQ\Scorpio.Messaging.RabbitMQ.csproj" />
     <ProjectReference Include="..\Scorpio.Messaging.Sockets\Scorpio.Messaging.Sockets.csproj" />
     <ProjectReference Include="..\Scorpio.ProcessRunner\Scorpio.ProcessRunner.csproj" />
   </ItemGroup>

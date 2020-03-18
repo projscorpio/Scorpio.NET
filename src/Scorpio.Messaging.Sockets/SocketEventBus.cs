@@ -80,7 +80,7 @@ namespace Scorpio.Messaging.Sockets
         {
             var eventName = string.IsNullOrWhiteSpace(keyOverride) ? _busSubscriptionManager.GetEventKey<TEvent>() : keyOverride;
             _logger.LogInformation($"Socket subscription manager: subscribed to: {eventName}");
-            _busSubscriptionManager.AddSubscription<TEvent, THandler>();
+            _busSubscriptionManager.AddSubscription<TEvent, THandler>(eventName);
             _subscriptionKeys.Add(eventName);
         }
 

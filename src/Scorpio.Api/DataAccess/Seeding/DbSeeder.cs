@@ -73,6 +73,20 @@ namespace Scorpio.Api.DataAccess.Seeding
                     Unit = "[lat, lon]"
                 });
 
+                await _sensorRepository.CreateAsync(new Sensor
+                {
+                    Name = "GPS Markers",
+                    SensorKey = "gps-markers",
+                    Unit = "[lat, lon]"
+                });
+
+                await _sensorRepository.CreateAsync(new Sensor
+                {
+                    Name = "Compass",
+                    SensorKey = "compass",
+                    Unit = "[deg]"
+                });
+
                 _logger.LogInformation("Seeding sensors done!");
             }
         }

@@ -1,0 +1,17 @@
+{
+    "attribution": "<a href=\"http://www.openmaptiles.org/\" target=\"_blank\">&copy; OpenMapTiles</a> <a href=\"http://www.openstreetmap.org/about/\" target=\"_blank\">&copy; OpenStreetMap contributors</a>",
+    "center": "17.0075,51.094,14",
+    "name": "OpenMapTiles",
+    "pixel_scale": "256",
+    "mtime": "1499626373833",
+    "format": "png",
+    "id": "openmaptiles",
+    "version": "3.6.1",
+    "maskLevel": "5",
+    "bounds": "16.652,50.877,17.363,51.311",
+    "planettime": "1499040000000",
+    "basename": "poland_wroclaw.mbtiles",
+    "description": "Extract from https://openmaptiles.org",
+    "maxzoom": "14",
+    "minzoom": "8"
+}
