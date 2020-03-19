@@ -10,6 +10,7 @@ import * as actions from "../../../actions";
 import AddMarkerWizard from "./addMarkerWizard";
 import { genericApi } from "../../../api/genericApi";
 import { API } from "../../../constants/appConstants";
+import ContextMenu from "./contextMenu";
 
 import "leaflet/dist/leaflet.css";
 import "./leafletCssWebpakWorkaround";
@@ -17,8 +18,8 @@ import "./leafletCssWebpakWorkaround";
 class MapWidget extends Component {
   constructor(props) {
     super(props);
-    this.state = { showWizard: false, editableMarker: null };
-    this.mapRef = React.createRef();
+    this.state = { showWizard: false, editableMarker: null, contextMenuCoords: { x: 0, y: 0 }, isContextOpened: false, useOnlineMap: true };
+    this.contextMenuRef = React.createRef();
   }
 
   onEditClicked = marker => {
@@ -29,12 +30,14 @@ class MapWidget extends Component {
     const { editableMarker } = this.state;
     const payload = Object.assign({}, data); // make copy, so we can delete name property without invaldiating form
     const markerName = payload.name;
+    const timeStamp = payload.timeStamp;
     delete payload.name;
     delete payload.id;
     delete payload.timeStamp;
 
     const sensorData = {
       id: editableMarker ? editableMarker.id : undefined,
+      timeStamp: timeStamp,
       sensorKey: "gps-markers",
       value: JSON.stringify(payload),
       comment: markerName
@@ -63,21 +66,35 @@ class MapWidget extends Component {
 
   onCenterMapClick = ev => {
     ev.preventDefault();
-    console.log(this.mapRef.current);
   };
 
   onRightMapClick = async ev => {
-    if (window.confirm("Do you want to add marker?")) {
-      this.handleAddMarker({
-        name: "",
-        latitude: ev.latlng.lat,
-        longitude: ev.latlng.lng
-      });
-    }
+    this.contextMenuLatlng = ev.latlng;
+    this.setState({
+      ...this.state,
+      isContextOpened: true,
+      contextMenuCoords: {
+        ...ev.containerPoint
+      }
+    });
+  };
+
+  onContextAddMarkerClick = async ev => {
+    ev.preventDefault();
+
+    this.setState(prev => {
+      return { ...prev, isContextOpened: true };
+    });
+
+    await this.handleAddMarker({
+      name: "",
+      latitude: this.contextMenuLatlng.lat,
+      longitude: this.contextMenuLatlng.lng
+    });
   };
 
   render() {
-    const { showWizard, editableMarker } = this.state;
+    const { showWizard, editableMarker, contextMenuCoords, isContextOpened, useOnlineMap } = this.state;
     const { roverPosition } = this.props.state.map;
 
     // TODO: follow rover switch or 'center' button to follow rover
@@ -92,15 +109,22 @@ class MapWidget extends Component {
             onSubmit={this.handleAddMarker}
           />
         )}
+        <ContextMenu
+          mountRef={this.contextMenuRef}
+          isOpened={isContextOpened}
+          useOnlineMap={useOnlineMap}
+          onAddMarkerClick={this.onContextAddMarkerClick}
+          onOnlineChanged={isOnline => this.setState({ useOnlineMap: isOnline })}
+        />
         <Map
           style={{
             width: "100%",
             height: "100%",
             zIndex: 1
           }}
+          onclick={_ => this.setState({ isContextOpened: false })}
           center={center}
           zoom={13}
-          ref={this.mapRef}
           oncontextmenu={this.onRightMapClick}
         >
           <Button
@@ -118,10 +142,17 @@ class MapWidget extends Component {
           >
             Add Marker
           </Button>
-          {/* <TileLayer url="/map/map_images/{z}/{x}/{y}.png" /> */}
-          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+          <TileLayer url={useOnlineMap ? "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" : "/map/map_images/{z}/{x}/{y}.png"} />
           <PositionMarkers onEditClicked={this.onEditClicked} onRemoveClicked={this.onRemoveClicked} />
           <RoverMarker rotate />
+          <div
+            ref={this.contextMenuRef}
+            style={{
+              position: "relative",
+              left: `${contextMenuCoords.x}px`,
+              top: `${contextMenuCoords.y}px`
+            }}
+          />
         </Map>
       </>
     );

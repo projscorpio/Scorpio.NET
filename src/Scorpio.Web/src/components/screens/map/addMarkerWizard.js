@@ -10,14 +10,13 @@ const AddMarkerWizard = ({ onClose, onSubmit, initialValues }) => {
   return (
     <GenericWizard title={title} onClose={onClose} onSubmit={onSubmit} initialValues={initialValues} showSteps={false}>
       <GenericWizard.Page>
-        <Field name="name" validate={Validators.required}>
+        <Field name="name">
           {({ input, meta }) => (
             <SemanticForm.Input
               {...input}
               label="Name:"
               error={meta.invalid && meta.touched && meta.error}
               placeholder="Name..."
-              required
               onChange={(ev, data) => input.onChange(data.value)}
             />
           )}
