@@ -4,21 +4,34 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Button } from "semantic-ui-react";
 import { Map, TileLayer } from "react-leaflet";
-import PositionMarkers from "./positionMarkers";
-import RoverMarker from "./roverMarker";
-import * as actions from "../../../actions";
-import AddMarkerWizard from "./addMarkerWizard";
 import { genericApi } from "../../../api/genericApi";
 import { API } from "../../../constants/appConstants";
+import * as actions from "../../../actions";
+import AlertDispatcher from "../../../services/AlertDispatcher";
+import PositionMarkers from "./positionMarkers";
+import RoverMarker from "./roverMarker";
+import AddMarkerWizard from "./addMarkerWizard";
 import ContextMenu from "./contextMenu";
 
 import "leaflet/dist/leaflet.css";
 import "./leafletCssWebpakWorkaround";
 
+const DEFAULT_VIEWPORT = {
+  center: [51.105, 17.038538], // somewhere in Wroclaw
+  zoom: 13
+};
+
 class MapWidget extends Component {
   constructor(props) {
     super(props);
-    this.state = { showWizard: false, editableMarker: null, contextMenuCoords: { x: 0, y: 0 }, isContextOpened: false, useOnlineMap: true };
+    this.state = {
+      viewport: null,
+      showWizard: false,
+      editableMarker: null,
+      contextMenuCoords: { x: 0, y: 0 },
+      isContextOpened: false,
+      useOnlineMap: true
+    };
     this.contextMenuRef = React.createRef();
   }
 
@@ -66,6 +79,18 @@ class MapWidget extends Component {
 
   onCenterMapClick = ev => {
     ev.preventDefault();
+    const { roverPosition } = this.props.state.map;
+    if (!roverPosition.latitude) {
+      AlertDispatcher.disdispatchErrorpatch("No rover pos!");
+      return;
+    }
+
+    this.setState({
+      viewport: {
+        zoom: 13,
+        center: [roverPosition.latitude, roverPosition.longitude]
+      }
+    });
   };
 
   onRightMapClick = async ev => {
@@ -82,9 +107,7 @@ class MapWidget extends Component {
   onContextAddMarkerClick = async ev => {
     ev.preventDefault();
 
-    this.setState(prev => {
-      return { ...prev, isContextOpened: true };
-    });
+    this.setState({ isContextOpened: true });
 
     await this.handleAddMarker({
       name: "",
@@ -94,11 +117,7 @@ class MapWidget extends Component {
   };
 
   render() {
-    const { showWizard, editableMarker, contextMenuCoords, isContextOpened, useOnlineMap } = this.state;
-    const { roverPosition } = this.props.state.map;
-
-    // TODO: follow rover switch or 'center' button to follow rover
-    const center = roverPosition.latitude ? [roverPosition.latitude, roverPosition.longitude] : [51.107883, 17.038538]; //- wro
+    const { showWizard, editableMarker, contextMenuCoords, isContextOpened, useOnlineMap, viewport } = this.state;
 
     return (
       <>
@@ -117,26 +136,21 @@ class MapWidget extends Component {
           onOnlineChanged={isOnline => this.setState({ useOnlineMap: isOnline })}
         />
         <Map
-          style={{
-            width: "100%",
-            height: "100%",
-            zIndex: 1
-          }}
+          style={{ width: "100%", height: "100%", zIndex: 9 }}
           onclick={_ => this.setState({ isContextOpened: false })}
-          center={center}
-          zoom={13}
+          viewport={viewport || DEFAULT_VIEWPORT}
           oncontextmenu={this.onRightMapClick}
         >
           <Button
             icon="crosshairs"
             color="blue"
-            className="leaflet-top leaflet-left"
-            style={{ marginTop: "70px", marginLeft: "5px", zIndex: 1001 }}
+            className="leaflet-top leaflet-left enable-events"
+            style={{ marginTop: "70px", marginLeft: "5px", zIndex: 401 }}
             onClick={this.onCenterMapClick}
           />
           <Button
-            className="leaflet-bottom leaflet-left"
-            style={{ marginBottom: "70px", marginLeft: "5px", zIndex: 401 }}
+            className="leaflet-bottom leaflet-left enable-events"
+            style={{ marginBottom: "20px", marginLeft: "5px", zIndex: 401 }}
             primary
             onClick={ev => this.setState({ showWizard: true })}
           >

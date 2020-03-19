@@ -26,7 +26,6 @@ html {
 }
 
 #root > div:first-child {
-  /* wybacz TODO write more specified selector*/
   height: 100%;
   width: 100%;
 }

@@ -86,3 +86,13 @@
 .margin-top-0 {
   margin-top: 0;
 }
+
+.scorpio-page-wrapper {
+  width: 100%;
+  height: calc(100% - 61px);
+  margin-top: 61px;
+}
+
+.enable-events {
+  pointer-events: all !important;
+}
