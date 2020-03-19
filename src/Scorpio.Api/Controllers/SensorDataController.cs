@@ -58,6 +58,10 @@ namespace Scorpio.Api.Controllers
         {
             SensorDataValidatorExecutor.Execute(entity, true);
             if (string.IsNullOrWhiteSpace(entity.Id)) entity.Id = id;
+
+            // If no date, add current one
+            if (entity.TimeStamp == new DateTime()) entity.TimeStamp = DateTime.UtcNow;
+
             return base.Update(id, entity);
         }
 

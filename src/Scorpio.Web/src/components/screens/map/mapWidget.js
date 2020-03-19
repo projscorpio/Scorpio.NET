@@ -61,11 +61,25 @@ class MapWidget extends Component {
     }
   };
 
+  onCenterMapClick = ev => {
+    ev.preventDefault();
+    console.log(this.mapRef.current);
+  };
+
+  onRightMapClick = async ev => {
+    if (window.confirm("Do you want to add marker?")) {
+      this.handleAddMarker({
+        name: "",
+        latitude: ev.latlng.lat,
+        longitude: ev.latlng.lng
+      });
+    }
+  };
+
   render() {
     const { showWizard, editableMarker } = this.state;
     const { roverPosition } = this.props.state.map;
 
-    console.log(this.mapRef.current);
     // TODO: follow rover switch or 'center' button to follow rover
     const center = roverPosition.latitude ? [roverPosition.latitude, roverPosition.longitude] : [51.107883, 17.038538]; //- wro
 
@@ -84,21 +98,31 @@ class MapWidget extends Component {
             height: "100%",
             zIndex: 1
           }}
-          attributionControl={true}
-          zoomControl={true}
-          ref={this.mapRef}
-          onclick={ev => console.log(ev)}
           center={center}
           zoom={13}
-          duration={2000}
+          ref={this.mapRef}
+          oncontextmenu={this.onRightMapClick}
         >
-          <TileLayer url="/map/map_images/{z}/{x}/{y}.png" />
+          <Button
+            icon="crosshairs"
+            color="blue"
+            className="leaflet-top leaflet-left"
+            style={{ marginTop: "70px", marginLeft: "5px", zIndex: 1001 }}
+            onClick={this.onCenterMapClick}
+          />
+          <Button
+            className="leaflet-bottom leaflet-left"
+            style={{ marginBottom: "70px", marginLeft: "5px", zIndex: 401 }}
+            primary
+            onClick={ev => this.setState({ showWizard: true })}
+          >
+            Add Marker
+          </Button>
+          {/* <TileLayer url="/map/map_images/{z}/{x}/{y}.png" /> */}
+          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
           <PositionMarkers onEditClicked={this.onEditClicked} onRemoveClicked={this.onRemoveClicked} />
           <RoverMarker rotate />
         </Map>
-        <Button className="scorpio-leaflet-overlay-container" color="blue" onClick={() => this.setState({ showWizard: true })}>
-          Add Marker
-        </Button>
       </>
     );
   }
