@@ -33,6 +33,7 @@ class MapWidget extends Component {
       useOnlineMap: true
     };
     this.contextMenuRef = React.createRef();
+    this.currentZoom = DEFAULT_VIEWPORT.zoom;
   }
 
   onEditClicked = marker => {
@@ -87,13 +88,13 @@ class MapWidget extends Component {
 
     this.setState({
       viewport: {
-        zoom: 13,
+        zoom: this.currentZoom,
         center: [roverPosition.latitude, roverPosition.longitude]
       }
     });
   };
 
-  onRightMapClick = async ev => {
+  onRightMapClick = ev => {
     this.contextMenuLatlng = ev.latlng;
     this.setState({
       ...this.state,
@@ -140,6 +141,7 @@ class MapWidget extends Component {
           onclick={_ => this.setState({ isContextOpened: false })}
           viewport={viewport || DEFAULT_VIEWPORT}
           oncontextmenu={this.onRightMapClick}
+          onzoomend={ev => (this.currentZoom = ev.target._zoom)}
         >
           <Button
             icon="crosshairs"
