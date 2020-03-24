@@ -1,0 +1,60 @@
+[
+  {
+    "__description": "Subscribe to topics",
+    "data": {
+      "keys": ["drive", "arm", "disarm", "..."]
+    }
+  },
+  {
+    "__description": "RoverControlCommand",
+    "key": "drive",
+    "data": {
+      "dir": "typeof double",
+      "acc": "typeof double"
+    }
+  },
+  {
+    "__description": "Allow movement",
+    "key": "arm",
+    "data": null
+  },
+  {
+    "__description": "Disallow movement",
+    "key": "disarm",
+    "data": null
+  },
+  {
+    "__description": "GPS data update",
+    "key": "gps",
+    "data": {
+      "lat": "typeof double",
+      "lon": "typeof double",
+      "satelites": "typeof int"
+    }
+  },
+  {
+    "__description": "Compass data update",
+    "key": "compass",
+    "data": {
+      "angle": "typeof double"
+    }
+  },
+  {
+    "__description": "Send CAN Open object **WIP**",
+    "key": "SendCanOpenObjectCommand",
+    "data": {
+      "index": "typeof int",
+      "subIndex": "typeof int",
+      "dataType": "typeof string **WIP**",
+      "value": "typeof any **WIP**"
+    }
+  },
+  {
+    "__description": "Ubiquiti stats update",
+    "key": "UbiquitiDataReceivedEvent",
+    "data": {
+      "key1": "value1",
+      "key2": "value2"
+    }
+  }
+]
