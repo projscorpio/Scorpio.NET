@@ -1,6 +1,7 @@
 [
   {
     "__description": "Subscribe to topics",
+    "key": "advertise",
     "data": {
       "keys": ["drive", "arm", "disarm", "..."]
     }
@@ -36,7 +37,7 @@
     "__description": "Compass data update",
     "key": "compass",
     "data": {
-      "angle": "typeof double"
+      "bearing": "typeof double"
     }
   },
   {
